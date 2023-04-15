@@ -1,0 +1,18 @@
+@import './abstracts/mixins';
+
+* {
+  box-sizing: border-box;
+  &::after,
+  &::before {
+    box-sizing: border-box;
+  }
+  &:focus {
+    outline: none;
+  }
+}
+
+html {
+  font-size: 62.5%; // 1rem : 10px since 10px/16px = 0.625
+  @include respond(tab-portrait) {
+  }
+}
