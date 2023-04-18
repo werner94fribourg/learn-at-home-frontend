@@ -1,20 +1,25 @@
 import loadable from '@loadable/component';
-import { Navigate, Route, Routes } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Route, Routes } from 'react-router';
 
-const Login = loadable(() => import('../../pages/Login'));
-const NotFound = loadable(() => import('../../pages/NotFound'));
-const Profile = loadable(() => import('../../pages/Profile'));
+const HomeRouter = loadable(() => import('./HomeRouter'));
+const ProfileRouter = loadable(() => import('./ProfileRouter'));
 
+/**
+ * Base router of the application that takes care of calling ProfileRouter or HomeRouter depending on the loging state of the user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
 const AppRouter = () => {
+  const { isAuth } = useSelector(state => state.auth);
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" replace />} replace />
-      <Route path="/login" element={<Login />} />
-      <Route path="/profile" element={<Profile />} />
-      <Route path="/not-found" element={<NotFound />} />
-      <Route path="*" element={<Navigate to="/not-found" replace />} replace />
+      <Route path="*" element={isAuth ? <ProfileRouter /> : <HomeRouter />} />
     </Routes>
   );
 };
+
+AppRouter.propTypes = {};
 
 export default AppRouter;

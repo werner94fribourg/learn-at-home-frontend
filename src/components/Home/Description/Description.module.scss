@@ -1,0 +1,57 @@
+@import '../../../scss/abstracts/mixins';
+@import '../../../scss/abstracts/variables';
+
+.description {
+  min-height: 100vh;
+  background-color: $primary;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5rem;
+  color: $white;
+  position: relative;
+  padding-top: 9.3rem;
+  @include respond(tab-land) {
+    visibility: hidden;
+    position: fixed;
+  }
+  &__header {
+    position: absolute;
+    top: 2.4rem;
+    left: 4.8rem;
+    font-family: 'Charm', cursive;
+    font-weight: 400;
+    font-size: 2.4rem;
+  }
+  &__logo-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  &__logo {
+    width: 9rem;
+  }
+  &__title {
+    font-family: 'Laila', sans-serif;
+    font-size: 4.8rem;
+    margin: 2rem 0;
+  }
+  &__subtitle-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    gap: 2.4rem;
+  }
+  &__subtitle {
+    font-size: 3.6rem;
+    max-width: 30.8rem;
+    margin: 0;
+  }
+  &__text {
+    font-size: 1.6rem;
+    max-width: 25.6rem;
+    margin: 0;
+  }
+}
