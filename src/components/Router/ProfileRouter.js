@@ -1,4 +1,5 @@
 import { SITE_URL, USERS_URL } from '../../utils/globals';
+import Layout from '../Layout/Layout';
 import loadable from '@loadable/component';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -37,10 +38,12 @@ const ProfileRouter = () => {
   }, [jwt]);
 
   return (
-    <Routes>
-      <Route path="/" element={<Profile />} />
-      <Route path="*" element={<Navigate to="/" replace />} replace />
-    </Routes>
+    <Layout>
+      <Routes>
+        <Route path="/" element={<Profile />} />
+        <Route path="*" element={<Navigate to="/" replace />} replace />
+      </Routes>
+    </Layout>
   );
 };
 

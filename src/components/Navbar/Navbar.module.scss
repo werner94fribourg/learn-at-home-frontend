@@ -1,0 +1,269 @@
+@import '../../scss/abstracts/mixins';
+@import '../../scss/abstracts/variables';
+
+.navbar {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  justify-content: space-between;
+  height: 8rem;
+  background-color: $primary;
+  color: $white;
+  padding: 0 4.8rem;
+  @include respondMax(75) {
+    grid-template-columns: 1fr;
+  }
+  &__toggle-btn {
+    display: none;
+    @include respondMax(75) {
+      display: block;
+      position: absolute;
+      top: 4rem;
+      left: 3rem;
+      transform: translateY(-50%);
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+  &__brand {
+    margin: auto 0;
+    font-family: 'Charm', cursive;
+    font-size: 3.2rem;
+    @include respondMax(75) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+  &__links {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 1.5fr 0.5fr;
+    font-size: 1.6rem;
+    @include respondMax(75) {
+      transform: translateX(-100%);
+      transition: all 0.5s ease-in-out;
+      &.navbar-open {
+        transition: all 0.5s ease-in-out;
+        transform: translateX(0);
+      }
+      position: absolute;
+      background: $white;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1.5fr repeat(5, 5rem) 1.5fr;
+      justify-items: center;
+      justify-content: flex-start;
+      bottom: 0;
+      left: 0;
+      color: black;
+      height: calc(100vh - 8rem);
+      width: 32.875rem;
+    }
+  }
+  &__link {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    position: relative;
+    transition: all 0.5s ease-in-out;
+    &:hover {
+      color: $primary-dark;
+      .navbar__link-unread {
+        color: $white;
+        background-color: $primary-dark;
+      }
+      transition: all 0.5s ease-in-out;
+      @include respondMax(75) {
+        color: inherit;
+        background-color: rgba($grey-dark, 0.1);
+        box-shadow: rgba($black, 0.1) 0px 10px 15px -3px,
+          rgba($black, 0.05) 0px 4px 6px -2px;
+        .navbar__link-unread {
+          color: $black;
+          background-color: $primary-light;
+        }
+      }
+      &::before {
+        transition: all 0.5s ease-in-out;
+        @include respondMax(75) {
+          width: 0.8rem;
+        }
+      }
+      &::after {
+        top: 90%;
+        transition: all 0.5s ease-in-out;
+      }
+    }
+    &::before {
+      display: none;
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0rem;
+      background-color: $primary-dark;
+      transition: all 0.5s ease-in-out;
+      @include respondMax(75) {
+        display: block;
+      }
+    }
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      bottom: 0;
+      width: 100%;
+      background-color: $primary-dark;
+      transition: all 0.5s ease-in-out;
+      @include respondMax(75) {
+        display: none;
+      }
+    }
+    @include respondMax(75) {
+      justify-content: flex-start;
+      width: 21rem;
+      gap: 2rem;
+    }
+    &--member {
+      display: none;
+      @include respondMax(75) {
+        display: flex;
+      }
+    }
+    &--profile {
+      justify-self: flex-end;
+      margin-right: 1rem;
+      &::before {
+        content: none;
+      }
+      &::after {
+        content: none;
+      }
+      &:hover {
+        color: inherit;
+        @include respondMax(75) {
+          color: inherit;
+          background-color: $white;
+          box-shadow: rgba($black, 0.1) 0px 0px 0px 0px;
+        }
+      }
+      img {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+      }
+      @include respondMax(75) {
+        grid-row-start: 1;
+        justify-self: center;
+        margin-right: 0;
+      }
+    }
+    &.active {
+      color: $primary-dark;
+      .navbar__link-unread {
+        color: $white;
+        background-color: $primary-dark;
+      }
+      @include respondMax(75) {
+        color: inherit;
+        background-color: rgba($grey-dark, 0.1);
+        box-shadow: rgba($black, 0.1) 0px 10px 15px -3px,
+          rgba($black, 0.05) 0px 4px 6px -2px;
+        .navbar__link-unread {
+          color: $black;
+          background-color: $primary-light;
+        }
+      }
+      &::before {
+        display: none;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 0.8rem;
+        background-color: $primary-dark;
+        @include respondMax(75) {
+          display: block;
+        }
+      }
+      &::after {
+        content: '';
+        position: absolute;
+        top: 90%;
+        bottom: 0;
+        width: 100%;
+        background-color: $primary-dark;
+        @include respondMax(75) {
+          display: none;
+        }
+      }
+    }
+  }
+  &__link-icon {
+    width: 3rem;
+    height: 3rem;
+    @include respondMax(75) {
+      color: $grey-dark;
+      opacity: 0.5;
+      margin-left: 1.5rem;
+    }
+  }
+  &__link-title {
+    &--chat-desktop {
+      @include respondMax(75) {
+        display: none;
+      }
+    }
+    &--chat-mobile {
+      display: none;
+      @include respondMax(75) {
+        display: block;
+      }
+    }
+  }
+  &__link-unread {
+    border-radius: 50%;
+    display: inline-block;
+    background-color: $primary-light;
+    color: $black;
+    padding: 0.5rem 0.8rem;
+    position: absolute;
+    top: 1.6rem;
+    left: calc(50% - 3rem);
+    transform: scale(0.8);
+    @include respondMax(75) {
+      top: 1rem;
+      left: 18rem;
+    }
+  }
+  &__logout {
+    justify-self: flex-end;
+    align-self: center;
+    background-color: $primary-light-dark;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
+    &::before {
+      content: none;
+    }
+    &::after {
+      content: none;
+    }
+    &:hover {
+      color: $primary-light-dark;
+      color: $white;
+      @include respondMax(75) {
+        color: $white !important;
+        background-color: $primary-light-dark;
+        box-shadow: rgba($black, 0.1) 0px 0px 0px 0px;
+      }
+    }
+    @include respondMax(75) {
+      justify-self: center;
+      justify-content: center;
+      color: $white !important;
+      .navbar__link-icon {
+        color: $white;
+        opacity: 1;
+      }
+    }
+  }
+}

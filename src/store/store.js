@@ -3,6 +3,7 @@
  * @module store
  */
 import authReducer from './slice/auth';
+import navbarReducer from './slice/navbar';
 import { configureStore } from '@reduxjs/toolkit';
 
 /**
@@ -13,7 +14,7 @@ import { configureStore } from '@reduxjs/toolkit';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const store = configureStore({
-  reducer: { auth: authReducer },
+  reducer: { auth: authReducer, navbar: navbarReducer },
 });
 
 export default store;
