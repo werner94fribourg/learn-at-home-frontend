@@ -1,0 +1,34 @@
+@import '../../../scss/abstracts/mixins';
+
+.events {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: min-content;
+  padding: 0rem 2.4rem;
+  transform: translateY(-2rem);
+  @include dashboard-link-and-title();
+  @include respondMax(75) {
+    transform: translateY(0);
+    padding: 0;
+  }
+  @include respond(mobile) {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 3.2rem;
+  }
+  &__list {
+    padding-top: 2.4rem;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 2.4rem;
+    @include respondMax(75) {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    @include respond(mobile) {
+      padding-top: 0;
+      display: flex;
+      flex-flow: column nowrap;
+    }
+  }
+}

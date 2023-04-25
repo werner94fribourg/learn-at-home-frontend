@@ -1,10 +1,8 @@
-import { SITE_URL, USERS_URL } from '../../utils/globals';
 import Layout from '../Layout/Layout';
 import loadable from '@loadable/component';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import { Navigate, Route, Routes } from 'react-router';
 
+const Dashboard = loadable(() => import('../../pages/Dashboard'));
 const Profile = loadable(() => import('../../pages/Profile'));
 
 /**
@@ -14,33 +12,11 @@ const Profile = loadable(() => import('../../pages/Profile'));
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const ProfileRouter = () => {
-  const { jwt } = useSelector(state => state.auth);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await fetch(USERS_URL + '/me', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          accept: 'application/json',
-          'Access-Control-Allow-Origin': SITE_URL,
-          Authorization: `Bearer ${jwt}`,
-        },
-        credentials: 'include',
-      });
-
-      const data = await response.json();
-
-      console.log(data);
-    };
-
-    fetchUser();
-  }, [jwt]);
-
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<Profile />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<Navigate to="/" replace />} replace />
       </Routes>
     </Layout>

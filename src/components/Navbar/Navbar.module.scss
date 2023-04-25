@@ -39,9 +39,9 @@
     font-size: 1.6rem;
     @include respondMax(75) {
       transform: translateX(-100%);
-      transition: all 0.5s ease-in-out;
+      transition: transform 0.5s ease-in-out;
       &.navbar-open {
-        transition: all 0.5s ease-in-out;
+        transition: transform 0.5s ease-in-out;
         transform: translateX(0);
       }
       position: absolute;
@@ -50,10 +50,10 @@
       grid-template-rows: 1.5fr repeat(5, 5rem) 1.5fr;
       justify-items: center;
       justify-content: flex-start;
+      top: 8rem;
       bottom: 0;
       left: 0;
       color: black;
-      height: calc(100vh - 8rem);
       width: 32.875rem;
     }
   }
@@ -64,14 +64,14 @@
     justify-content: center;
     gap: 0.5rem;
     position: relative;
-    transition: all 0.5s ease-in-out;
+    transition: color 0.5s ease-in-out;
     &:hover {
       color: $primary-dark;
+      transition: color 0.5s ease-in-out;
       .navbar__link-unread {
         color: $white;
         background-color: $primary-dark;
       }
-      transition: all 0.5s ease-in-out;
       @include respondMax(75) {
         color: inherit;
         background-color: rgba($grey-dark, 0.1);
@@ -79,18 +79,17 @@
           rgba($black, 0.05) 0px 4px 6px -2px;
         .navbar__link-unread {
           color: $black;
-          background-color: $primary-light;
+          background-color: $primary-light-3;
         }
       }
       &::before {
-        transition: all 0.5s ease-in-out;
         @include respondMax(75) {
           width: 0.8rem;
         }
       }
       &::after {
         top: 90%;
-        transition: all 0.5s ease-in-out;
+        transition: top 0.5s ease-in-out;
       }
     }
     &::before {
@@ -101,7 +100,6 @@
       bottom: 0;
       width: 0rem;
       background-color: $primary-dark;
-      transition: all 0.5s ease-in-out;
       @include respondMax(75) {
         display: block;
       }
@@ -113,7 +111,7 @@
       bottom: 0;
       width: 100%;
       background-color: $primary-dark;
-      transition: all 0.5s ease-in-out;
+      transition: top 0.5s ease-in-out;
       @include respondMax(75) {
         display: none;
       }
@@ -132,6 +130,12 @@
     &--profile {
       justify-self: flex-end;
       margin-right: 1rem;
+      span {
+        display: none;
+        @include respondMax(75) {
+          display: block;
+        }
+      }
       &::before {
         content: none;
       }
@@ -170,7 +174,7 @@
           rgba($black, 0.05) 0px 4px 6px -2px;
         .navbar__link-unread {
           color: $black;
-          background-color: $primary-light;
+          background-color: $primary-light-3;
         }
       }
       &::before {
@@ -223,7 +227,7 @@
   &__link-unread {
     border-radius: 50%;
     display: inline-block;
-    background-color: $primary-light;
+    background-color: $primary-light-3;
     color: $black;
     padding: 0.5rem 0.8rem;
     position: absolute;
@@ -238,7 +242,7 @@
   &__logout {
     justify-self: flex-end;
     align-self: center;
-    background-color: $primary-light-dark;
+    background-color: $primary-dark;
     border-radius: 0.5rem;
     padding: 1rem 2rem;
     &::before {
@@ -248,11 +252,11 @@
       content: none;
     }
     &:hover {
-      color: $primary-light-dark;
+      color: $primary-dark;
       color: $white;
       @include respondMax(75) {
         color: $white !important;
-        background-color: $primary-light-dark;
+        background-color: $primary-dark;
         box-shadow: rgba($black, 0.1) 0px 0px 0px 0px;
       }
     }

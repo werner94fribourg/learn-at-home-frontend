@@ -1,0 +1,25 @@
+@import '../../../../scss/abstracts/variables';
+
+.event {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 2.4rem 1.6rem;
+  width: 100%;
+  border: 1px solid $grey-light-1;
+  border-radius: 0.5rem;
+  &__title {
+    font-size: 1.4rem;
+    color: $black;
+    margin: 0;
+  }
+  &__paragraph {
+    font-size: 1.2rem;
+    color: $grey;
+  }
+  &__datetime {
+    font-size: 1.2rem;
+    padding-top: 1.6rem;
+    color: $grey-2;
+    border-top: 1px solid $grey-light-1;
+  }
+}

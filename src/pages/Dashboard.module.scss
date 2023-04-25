@@ -1,0 +1,24 @@
+@import '../scss/abstracts/mixins';
+@import '../scss/abstracts/variables';
+
+.dashboard {
+  max-width: 120rem;
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 3.2rem;
+  display: grid;
+  grid-template-rows: repeat(3, min-content);
+  grid-template-columns: 1fr 1.75fr;
+  @include respondMax(75) {
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 3.2rem 2.4rem;
+    gap: 2.4rem;
+  }
+  &__title {
+    font-size: 3.2rem;
+    font-weight: 400;
+    align-self: flex-start;
+    margin: 0;
+  }
+}

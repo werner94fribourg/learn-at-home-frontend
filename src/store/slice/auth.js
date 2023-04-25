@@ -6,11 +6,16 @@ import { login } from '../../utils/api';
 import { createSlice } from '@reduxjs/toolkit';
 
 /**
+ * The authentication store object
  * @typedef AuthInitialState
  * @property {boolean} isAuth - authentication status of the user
  * @property {string} authErrorMessage - the displayed error message when failing to authenticate
+ *
  * The initial state for the authentication store of the user
  * @type {AuthInitialState}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const initialState = { isAuth: false, jwt: '', authErrorMessage: '' };
 
@@ -33,6 +38,7 @@ const authSlice = createSlice({
     },
     logout(state) {
       state.isAuth = false;
+      state.jwt = '';
     },
     setErrorMessage(state, action) {
       const { payload: message } = action;
@@ -91,7 +97,8 @@ export const connect = async (credentials, dispatch) => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const initialize = (token, dispatch) => {
-  dispatch(authActions.login(token));
+  if (token) dispatch(authActions.login(token));
+  else dispatch(authActions.logout());
 };
 
 /**

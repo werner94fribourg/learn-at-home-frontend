@@ -1,0 +1,17 @@
+@import '../../../../scss/abstracts/variables';
+
+.student {
+  color: $black;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 1.6rem;
+  &__picture {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+  }
+  &__username {
+    font-size: 1.6rem;
+    font-weight: 500;
+  }
+}

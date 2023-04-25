@@ -1,6 +1,7 @@
 import { navbarActions } from '../../store/slice/navbar';
+import { PROFILE_PICTURES_URL } from '../../utils/globals';
 import styles from './Navbar.module.scss';
-import profile from './photo.png';
+import UnreadCount from './UnreadCount';
 import {
   faArrowRightFromBracket,
   faBars,
@@ -14,6 +15,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 
 /**
  * Component representing the navbar in the application
@@ -21,11 +23,14 @@ import { useDispatch, useSelector } from 'react-redux';
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-const { NavLink } = require('react-router-dom');
-
 const Navbar = props => {
   const { style } = props;
-  const { isOpen } = useSelector(state => state.navbar);
+  const {
+    users: {
+      me: { photo, username },
+    },
+    navbar: { isOpen },
+  } = useSelector(state => state);
   const dispatch = useDispatch();
 
   let linksClassNames = styles['navbar__links'];
@@ -68,7 +73,7 @@ const Navbar = props => {
             className={styles['navbar__link-icon']}
             icon={faComment}
           />
-          <span className={styles['navbar__link-unread']}>6</span>
+          <UnreadCount className={styles['navbar__link-unread']} />
           <span
             className={`${styles['navbar__link-title']} ${styles['navbar__link-title--chat-desktop']}`}
           >
@@ -123,8 +128,8 @@ const Navbar = props => {
           className={`${styles['navbar__link']} ${styles['navbar__link--profile']}`}
           to="/profile"
         >
-          <img src={profile} alt="Profile" />
-          <span className={styles['navbar__link-title']}> Werner</span>
+          <img src={`${PROFILE_PICTURES_URL}/${photo}`} alt="Profile" />
+          <span className={styles['navbar__link-title']}> {username}</span>
         </NavLink>
         <NavLink
           className={`${styles['navbar__link']} ${styles['navbar__logout']}`}

@@ -1,0 +1,54 @@
+@import '../../../../scss/abstracts/variables';
+
+.task {
+  color: $black;
+  border-radius: 0.5rem;
+  padding: 0 2.8rem;
+  &.todo {
+    border: 1px solid $grey-light-1;
+  }
+  &.done {
+    background-color: $primary-light-4;
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+  &.validated {
+    background-color: $primary-light-2;
+    text-decoration: line-through;
+  }
+  &__title {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    align-items: center;
+    gap: 1.2rem;
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+  &__checkbox {
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    border: 1.25px solid $grey-light-2;
+    border-radius: 3.333px;
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      display: none;
+      left: 4px;
+      top: -2px;
+      width: 10px;
+      height: 16px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      transform: rotate(45deg);
+    }
+    &.checked {
+      border: none;
+      background-color: $primary;
+      &::after {
+        display: block;
+      }
+    }
+  }
+}

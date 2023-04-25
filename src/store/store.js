@@ -3,7 +3,10 @@
  * @module store
  */
 import authReducer from './slice/auth';
+import messagesReducer from './slice/messages';
 import navbarReducer from './slice/navbar';
+import tasksReducer from './slice/tasks';
+import usersReducer from './slice/users';
 import { configureStore } from '@reduxjs/toolkit';
 
 /**
@@ -14,7 +17,13 @@ import { configureStore } from '@reduxjs/toolkit';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const store = configureStore({
-  reducer: { auth: authReducer, navbar: navbarReducer },
+  reducer: {
+    auth: authReducer,
+    navbar: navbarReducer,
+    users: usersReducer,
+    messages: messagesReducer,
+    tasks: tasksReducer,
+  },
 });
 
 export default store;
