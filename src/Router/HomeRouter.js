@@ -1,9 +1,9 @@
-import ForgotPassword from '../ForgotPassword/ForgotPassword';
-import Signup from '../Signup/Signup';
+import ForgotPassword from '../components/ForgotPassword/ForgotPassword';
+import Signup from '../components/Signup/Signup';
 import loadable from '@loadable/component';
 import { Navigate, Route, Routes } from 'react-router';
 
-const Home = loadable(() => import('../../pages/Home'));
+const Home = loadable(() => import('../pages/Home'));
 
 /**
  * Router of the application (user logged out)

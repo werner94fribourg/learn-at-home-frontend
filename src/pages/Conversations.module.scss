@@ -1,0 +1,13 @@
+@import '../scss/abstracts/mixins';
+
+.conversations {
+  display: grid;
+  grid-template-columns: 38.4rem 1fr;
+  grid-template-rows: calc(100vh - 8rem - 6.4rem);
+  z-index: 100;
+  @include respond(tab-portrait) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, min-content);
+    gap: 3.2rem;
+  }
+}

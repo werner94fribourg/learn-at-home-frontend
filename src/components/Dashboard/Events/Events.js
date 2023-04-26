@@ -1,4 +1,4 @@
-import { initialize } from '../../../store/slice/auth';
+import { logout } from '../../../store/slice/auth';
 import { getEvents } from '../../../utils/api';
 import Button from '../../UI/Button/Button';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
@@ -24,10 +24,7 @@ const Events = () => {
     limit: 3,
   });
 
-  if (data && !data.authorized) {
-    initialize('', dispatch);
-    localStorage.removeItem('jwt');
-  }
+  if (data && !data.authorized) logout(dispatch);
 
   return (
     <div className={styles.events}>

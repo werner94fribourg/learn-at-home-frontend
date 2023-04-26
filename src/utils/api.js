@@ -1,18 +1,25 @@
 /**
- * Store of all global helper functions used in the application
- * @module helpers
+ * Store of all global api functions used in the application
+ * @module api
  */
 import {
+  CONVERSATION_WITH_ID_URL,
   DONE_STUDENTS_TASKS_URL,
   EVENTS_URL,
+  LAST_URL,
+  LAST_WITH_ID_URL,
   LOGIN_URL,
   ME_URL,
+  READ_URL,
+  STATUS_URL,
   SUPERVISED_STUDENTS_URL,
   TASKS_URL,
   TODO_STUDENTS_TASKS_URL,
   UNREAD_URL,
+  UNREAD_WITH_ID_URL,
   VALIDATED_STUDENTS_TASKS_URL,
 } from './globals';
+import { makeApiCall } from './utils';
 
 /**
  * Function used to log the user into the application by calling the backend
@@ -23,8 +30,9 @@ import {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const login = async credentials => {
-  try {
-    const response = await fetch(LOGIN_URL, {
+  return makeApiCall(
+    LOGIN_URL,
+    {
       method: 'POST',
       mode: 'cors',
       headers: {
@@ -33,25 +41,12 @@ export const login = async credentials => {
       },
       credentials: 'include',
       body: JSON.stringify(credentials),
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       const { token } = data;
       return { valid: true, token };
     }
-
-    const { message } = data;
-    return { valid: false, message };
-  } catch (err) {
-    return {
-      valid: false,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+  );
 };
 
 /**
@@ -63,8 +58,9 @@ export const login = async credentials => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const getConnectedUser = async token => {
-  try {
-    const response = await fetch(ME_URL, {
+  return makeApiCall(
+    ME_URL,
+    {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -73,29 +69,11 @@ export const getConnectedUser = async token => {
         Authorization: `Bearer ${token}`,
       },
       credentials: 'include',
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       return { valid: true, authorized: true, me: data.data.user };
     }
-
-    const { message } = data;
-    return {
-      valid: false,
-      authorized: status === 401 && status >= 403,
-      message,
-    };
-  } catch (err) {
-    return {
-      valid: false,
-      authorized: true,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+  );
 };
 
 /**
@@ -107,8 +85,9 @@ export const getConnectedUser = async token => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const getTotalUnreadMessages = async token => {
-  try {
-    const response = await fetch(UNREAD_URL, {
+  return makeApiCall(
+    UNREAD_URL,
+    {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -117,13 +96,8 @@ export const getTotalUnreadMessages = async token => {
         Authorization: `Bearer ${token}`,
       },
       credentials: 'include',
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       const { data: countData } = data;
 
       return {
@@ -132,20 +106,7 @@ export const getTotalUnreadMessages = async token => {
         count: countData?.unread?.count || 0,
       };
     }
-
-    const { message } = data;
-    return {
-      valid: false,
-      authorized: status === 401 && status === 403,
-      message,
-    };
-  } catch {
-    return {
-      valid: false,
-      authorized: true,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+  );
 };
 
 /**
@@ -165,8 +126,9 @@ export const getTotalUnreadMessages = async token => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const getEvents = async ({ token, page, limit }) => {
-  try {
-    const response = await fetch(`${EVENTS_URL}?page=${page}&limit=${limit}`, {
+  return makeApiCall(
+    `${EVENTS_URL}?page=${page}&limit=${limit}`,
+    {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -175,34 +137,15 @@ export const getEvents = async ({ token, page, limit }) => {
         Authorization: `Bearer ${token}`,
       },
       credentials: 'include',
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       const {
         data: { events },
       } = data;
 
       return { valid: true, authorized: true, events };
     }
-
-    const { message } = data;
-
-    return {
-      valid: false,
-      authorized: status === 401 && status === 403,
-      message,
-    };
-  } catch (err) {
-    return {
-      valid: false,
-      authorized: true,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+  );
 };
 
 /**
@@ -215,8 +158,9 @@ export const getEvents = async ({ token, page, limit }) => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const getTasks = async (token, url) => {
-  try {
-    const response = await fetch(url, {
+  return makeApiCall(
+    url,
+    {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -225,34 +169,15 @@ const getTasks = async (token, url) => {
         Authorization: `Bearer ${token}`,
       },
       credentials: 'include',
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       const {
         data: { tasks },
       } = data;
 
       return { valid: true, authorized: true, tasks };
     }
-
-    const { message } = data;
-
-    return {
-      valid: false,
-      authorized: status === 401 && status === 403,
-      message,
-    };
-  } catch {
-    return {
-      valid: false,
-      authorized: true,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+  );
 };
 
 /**
@@ -313,8 +238,9 @@ export const getValidatedStudentsTasks = async token =>
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const getSupervisedStudents = async ({ token }) => {
-  try {
-    const response = await fetch(SUPERVISED_STUDENTS_URL, {
+  return makeApiCall(
+    SUPERVISED_STUDENTS_URL,
+    {
       method: 'GET',
       mode: 'cors',
       headers: {
@@ -323,32 +249,280 @@ export const getSupervisedStudents = async ({ token }) => {
         Authorization: `Bearer ${token}`,
       },
       credentials: 'include',
-    });
-
-    const { status } = response;
-
-    const data = await response.json();
-
-    if (status === 200) {
+    },
+    data => {
       const {
         data: { users },
       } = data;
 
       return { valid: true, authorized: true, users };
     }
+  );
+};
 
-    const { message } = data;
+/**
+ * Function used to retrieve, for each existing conversation, the last messages he received/sent to each user
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the last messages received/sent by the logged user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getLastMessages = async token => {
+  return makeApiCall(
+    LAST_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { messages },
+      } = data;
 
-    return {
-      valid: false,
-      authorized: status === 401 && status === 403,
-      message,
-    };
-  } catch {
-    return {
-      valid: false,
-      authorized: true,
-      message: 'An unknow error happened. Try again later.',
-    };
-  }
+      return { valid: true, authorized: true, messages };
+    }
+  );
+};
+
+/**
+ * Function used to retrieve the last message received/sent by the logged user to another one
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user from which we want to retrieve the last message
+ * @returns {Promise<Object>} a promise containing the last message received/sent by the logged user to a specific one
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getLastMessage = async (token, userId) => {
+  return makeApiCall(
+    LAST_WITH_ID_URL.replace('{id}', userId),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { message },
+      } = data;
+
+      return { valid: true, authorized: true, message };
+    }
+  );
+};
+
+/**
+ * Function used to get the number of unread message from a specific user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the id of the user from which we want to know the number of unread messages
+ * @returns {Promise<Object>} a promise containing the number of unread messages
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getUnread = async (token, id) => {
+  return makeApiCall(
+    UNREAD_WITH_ID_URL.replace('{id}', id),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const { data: countData } = data;
+
+      return {
+        valid: true,
+        authorized: true,
+        count: countData?.unread?.count || 0,
+      };
+    }
+  );
+};
+
+/**
+ * Function used to get the messages from a conversation with a specific user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the id of the user with whom we want to retrieve the conversation
+ * @param {number} page the number of the page we want to retrieve
+ * @param {number} limit the number of elements per page
+ * @returns {Promise<Object>} a promise containing the messages from a conversation with a specific user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getConversation = async (token, id, page = 1, limit = 10) => {
+  return makeApiCall(
+    `${CONVERSATION_WITH_ID_URL.replace(
+      '{id}',
+      id
+    )}?page=${page}&limit=${limit}`,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Access-Control-Allow-Origin': 'https://localhost:3000',
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { messages },
+      } = data;
+
+      return { valid: true, authorized: true, messages };
+    }
+  );
+};
+
+/**
+ * Function used to read a specific message
+ * @param {string} token the jwt token of the logged user
+ * @param {string} messageId the id of the message we want to read
+ * @returns {Promise<Object>} a promise containing the updated message we wanted to read
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const readMessage = async (token, messageId) => {
+  return makeApiCall(
+    READ_URL.replace('{id}', messageId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { message },
+      } = data;
+
+      return { valid: true, authorized: true, message };
+    }
+  );
+};
+
+/**
+ * Function used to send a message to another user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the id of the user to which we want to send a message
+ * @param {string} content the content of the message we want to send
+ * @returns {Promise<Object>} a promise containing the message we just sent
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const sendMessage = async (token, id, content) => {
+  return makeApiCall(
+    CONVERSATION_WITH_ID_URL.replace('{id}', id),
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify({ content }),
+    },
+    data => {
+      const {
+        data: { message },
+      } = data;
+
+      return { valid: true, authorized: true, message };
+    },
+    201
+  );
+};
+
+/**
+ * Function used to send a message (content and file) to another user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the id of the user to which we want to send a message
+ * @param {FormData} formData the data (content and file) we want to send to the other user
+ * @returns {Promise<Object>} a promise containing the message (content and files) we just sent
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const sendMessageWithFiles = async (token, id, formData) => {
+  return makeApiCall(
+    CONVERSATION_WITH_ID_URL.replace('{id}', id),
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: formData,
+    },
+    data => {
+      const {
+        data: { message },
+      } = data;
+
+      return { valid: true, authorized: true, message };
+    },
+    201
+  );
+};
+
+/**
+ * Function used to get the connection status of an user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user from which we want to retrieve the connection status
+ * @returns {Promise<Object>} a promise containing the connection status of a specific user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getConnectionStatus = async (token, userId) => {
+  return makeApiCall(
+    STATUS_URL.replace('{id}', userId),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { connected },
+      } = data;
+
+      return { valid: true, authorized: true, connected };
+    }
+  );
 };

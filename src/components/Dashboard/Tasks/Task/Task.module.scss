@@ -1,7 +1,7 @@
 @import '../../../../scss/abstracts/variables';
 
 .task {
-  color: $black;
+  color: $black-1;
   border-radius: 0.5rem;
   padding: 0 2.8rem;
   &.todo {
@@ -39,7 +39,7 @@
       top: -2px;
       width: 10px;
       height: 16px;
-      border: solid white;
+      border: solid $white;
       border-width: 0 3px 3px 0;
       transform: rotate(45deg);
     }

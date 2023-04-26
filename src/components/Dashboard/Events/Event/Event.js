@@ -13,7 +13,7 @@ const Event = props => {
 
   const formattedDateTime = moment(datetime)
     .tz('Europe/Zurich')
-    .format('hh:mm, dd, DD.MM.YYYY');
+    .format('HH:mm, dd, DD.MM.YYYY');
   return (
     <div className={styles.event}>
       <h3 className={styles['event__title']}>{title}</h3>

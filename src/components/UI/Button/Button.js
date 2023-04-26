@@ -22,7 +22,7 @@ Button.propTypes = {
   /** The type of the button we want to display */
   type: PropTypes.oneOf(['button', 'submit']),
   /** The text we want to display inside the button */
-  text: PropTypes.string,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 };
 
 export default Button;

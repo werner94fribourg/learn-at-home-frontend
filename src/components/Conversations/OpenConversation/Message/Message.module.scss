@@ -1,0 +1,99 @@
+@import '../../../../scss/abstracts/variables';
+
+.message {
+  padding: 0.8rem 1.6rem;
+  padding-bottom: 2.4rem;
+  width: 50%;
+  max-width: 34rem;
+  margin-top: 1.2rem;
+  font-size: 1.4rem;
+  position: relative;
+  &--own {
+    background-color: $primary;
+    margin-right: 1.5rem;
+    border-radius: 1.2rem 1.2rem 0 1.2rem;
+    color: $white;
+    align-self: flex-end;
+    .message__time {
+      color: inherit;
+      right: 3.5rem;
+    }
+  }
+  &--other {
+    border: 1px solid $grey-light-1;
+    background-color: $white;
+    margin-left: 8rem;
+    border-radius: 0 1.2rem 1.2rem 1.2rem;
+    color: $black-2;
+    .message__time {
+      color: $grey-light-3;
+      right: 1.6rem;
+    }
+  }
+  &__photo {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    border: 0.05px solid $grey-light-3;
+    position: absolute;
+    top: 0;
+    left: -4.4rem;
+  }
+  &__content {
+    margin: 0;
+    margin-bottom: 0.5rem;
+    line-height: 2rem;
+  }
+  &__picture-file {
+    width: 100%;
+    height: 10.6rem;
+    margin: 0.5rem 0;
+    object-fit: contain;
+    border: 1px solid $grey-light-1;
+    border-radius: 0.8rem;
+    padding: 0.5rem;
+  }
+  &__time {
+    position: absolute;
+    bottom: 0.8rem;
+  }
+  &__view {
+    align-self: flex-end;
+    position: absolute;
+    display: block;
+    width: 2rem;
+    height: 1.5rem;
+    bottom: 0.8rem;
+    right: 1.2rem;
+    svg {
+      color: $white;
+    }
+    &--read {
+      svg {
+        color: $primary-light-7;
+      }
+    }
+  }
+  &__check {
+    position: absolute;
+    top: 0;
+    height: 15px;
+    color: $black-3;
+    &--left {
+      right: 25%;
+      z-index: 1;
+    }
+    &--right {
+      right: 0;
+      z-index: 2;
+    }
+  }
+  &__file {
+    font-weight: bold;
+    font-style: italic;
+  }
+  &__file-icon {
+    width: 22px;
+    height: 20px;
+  }
+}

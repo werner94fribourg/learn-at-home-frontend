@@ -1,0 +1,97 @@
+@import '../../../scss/abstracts/variables';
+@import '../../../scss/abstracts/mixins';
+
+.notification {
+  position: fixed;
+  left: 50px;
+  bottom: 0;
+  z-index: 1000;
+  padding: 3.2rem;
+  background-color: $primary-light-3;
+  border-radius: 5px 5px 0 0;
+  width: 300px;
+  @include respond(mobile) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &-enter {
+    transform: scaleY(0);
+    @include respond(mobile) {
+      transform: scaleY(0) translateX(-50%);
+    }
+  }
+  &-enter-active {
+    transform: scaleY(1);
+    transform-origin: bottom left;
+    transition: transform 1000ms ease-in-out;
+    @include respond(mobile) {
+      transform: scaleY(1) translateX(-50%);
+    }
+  }
+  &-enter-done {
+    transform: scaleY(1);
+    transform-origin: bottom left;
+    @include respond(mobile) {
+      transform: scaleY(1) translateX(-50%);
+    }
+  }
+  &-exit {
+    transform: scaleY(1);
+    @include respond(mobile) {
+      transform: scaleY(1) translateX(-50%);
+    }
+  }
+  &-exit-active {
+    transform: scaleY(0);
+    transform-origin: bottom left;
+    transition: transform 1000ms ease-in-out;
+    @include respond(mobile) {
+      transform: scaleY(0) translateX(-50%);
+    }
+  }
+  &-exit-done {
+    transform: scaleY(0);
+    transform-origin: bottom left;
+    @include respond(mobile) {
+      transform: scaleY(0) translateX(-50%);
+    }
+  }
+  &__sender {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  &__sender-picture {
+    height: 48px;
+    border-radius: 50%;
+  }
+  &__sender-username {
+    font-size: 2rem;
+    font-weight: 600;
+    color: $black-1;
+  }
+  &__content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 0 0 0;
+  }
+  &__paragraph {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: $grey-light-5;
+    max-height: 100px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+  }
+  &__file {
+    width: 25px;
+    height: 20px;
+  }
+}

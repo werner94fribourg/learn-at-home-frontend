@@ -1,6 +1,5 @@
-import { initialize } from '../../store/slice/auth';
+import { logout } from '../../store/slice/auth';
 import { navbarActions } from '../../store/slice/navbar';
-import { PROFILE_PICTURES_URL } from '../../utils/globals';
 import styles from './Navbar.module.scss';
 import UnreadCount from './UnreadCount';
 import {
@@ -8,6 +7,7 @@ import {
   faBars,
   faCalendarDays,
   faComment,
+  faGraduationCap,
   faSquarePlus,
   faTableColumns,
   faUser,
@@ -44,8 +44,7 @@ const Navbar = props => {
 
   const logoutHandler = event => {
     event.preventDefault();
-    initialize('', dispatch);
-    localStorage.removeItem('jwt');
+    logout(dispatch);
   };
 
   return (
@@ -75,7 +74,7 @@ const Navbar = props => {
           className={({ isActive }) =>
             styles['navbar__link'] + (isActive ? ` ${styles.active}` : '')
           }
-          to="/conversation"
+          to="/conversations"
         >
           <FontAwesomeIcon
             className={styles['navbar__link-icon']}
@@ -92,7 +91,23 @@ const Navbar = props => {
             className={`${styles['navbar__link-title']} ${styles['navbar__link-title--chat-mobile']}`}
           >
             {' '}
-            Conversation
+            Conversations
+          </span>
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            `${styles['navbar__link']} ${styles['navbar__link--member']}` +
+            (isActive ? ` ${styles.active}` : '')
+          }
+          to="/teaching"
+        >
+          <FontAwesomeIcon
+            className={styles['navbar__link-icon']}
+            icon={faGraduationCap}
+          />
+          <span className={styles['navbar__link-title']}>
+            {' '}
+            Teaching demands
           </span>
         </NavLink>
         <NavLink
@@ -136,7 +151,7 @@ const Navbar = props => {
           className={`${styles['navbar__link']} ${styles['navbar__link--profile']}`}
           to="/profile"
         >
-          <img src={`${PROFILE_PICTURES_URL}/${photo}`} alt="Profile" />
+          <img src={photo} alt="Profile" />
           <span className={styles['navbar__link-title']}> {username}</span>
         </NavLink>
         <a
@@ -156,7 +171,7 @@ const Navbar = props => {
 };
 
 Navbar.propTypes = {
-  /** The custom inline styles we want to associate to the alert */
+  /** The custom inline styles we want to associate to the navbar */
   style: PropTypes.object,
 };
 

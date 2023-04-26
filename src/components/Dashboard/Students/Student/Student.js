@@ -1,4 +1,3 @@
-import { PROFILE_PICTURES_URL } from '../../../../utils/globals';
 import styles from './Student.module.scss';
 import PropTypes from 'prop-types';
 
@@ -15,7 +14,7 @@ const Student = props => {
     <div className={styles.student}>
       <img
         className={styles['student__picture']}
-        src={`${PROFILE_PICTURES_URL}/${photo}`}
+        src={photo}
         alt="werner94fribourg"
       />
       <h3 className={styles['student__username']}>{username}</h3>

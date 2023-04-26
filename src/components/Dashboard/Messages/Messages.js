@@ -16,7 +16,7 @@ const Messages = () => {
   if (totalUnread === -1) return <LoadingSpinner style={{ padding: '0' }} />;
 
   return (
-    <Link className={styles.messages} to="/chat">
+    <Link className={styles.messages} to="/conversations">
       {totalUnread >= 0 && (
         <Fragment>
           <h2 className={styles['messages__title']}>

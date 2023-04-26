@@ -1,0 +1,107 @@
+@import '../../scss/abstracts/variables';
+@import '../../scss/abstracts/mixins';
+
+.sidenav {
+  display: grid;
+  font-size: 1.6rem;
+  background: $white;
+  grid-template-columns: 1fr;
+  grid-template-rows: 15rem repeat(3, 5rem);
+  justify-items: center;
+  justify-content: flex-start;
+  color: black;
+  grid-row: 1 / 4;
+  @include respondMax(75) {
+    display: none;
+  }
+  &__link {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+    width: 100%;
+    position: relative;
+    transition: color 0.5s ease-in-out;
+    &:hover {
+      color: inherit;
+      background-color: rgba($grey-dark, 0.1);
+      box-shadow: rgba($black-1, 0.1) 0px 10px 15px -3px,
+        rgba($black-1, 0.05) 0px 4px 6px -2px;
+      transition: color 0.5s ease-in-out;
+      .navbar__link-unread {
+        color: $black-1;
+        background-color: $primary-light-3;
+      }
+      &::before {
+        width: 0.8rem;
+      }
+    }
+    &::before {
+      display: block;
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 0rem;
+      background-color: $primary-dark;
+    }
+    &--profile {
+      justify-self: center;
+      justify-content: center;
+      &::before {
+        content: none;
+      }
+      &::after {
+        content: none;
+      }
+      &:hover {
+        color: inherit;
+        background-color: $white;
+        box-shadow: rgba($black-1, 0.1) 0px 0px 0px 0px;
+      }
+      img {
+        width: 6rem;
+        height: 6rem;
+        border-radius: 50%;
+      }
+    }
+    &.active {
+      color: inherit;
+      background-color: rgba($grey-dark, 0.1);
+      box-shadow: rgba($black-1, 0.1) 0px 10px 15px -3px,
+        rgba($black-1, 0.05) 0px 4px 6px -2px;
+      .navbar__link-unread {
+        color: $black-1;
+        background-color: $primary-light-3;
+      }
+      &::before {
+        display: block;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 0.8rem;
+        background-color: $primary-dark;
+      }
+    }
+  }
+  &__link-icon {
+    width: 3rem;
+    height: 3rem;
+    color: $grey-dark;
+    opacity: 0.5;
+    margin-left: 1.5rem;
+  }
+  &__link-unread {
+    border-radius: 50%;
+    display: inline-block;
+    background-color: $primary-light-3;
+    color: $black-1;
+    padding: 0.5rem 0.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 21rem;
+    transform: scale(0.8);
+  }
+}

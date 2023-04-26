@@ -1,0 +1,22 @@
+@import '../scss/abstracts/mixins';
+@import '../scss/abstracts/variables';
+
+.layout {
+  display: grid;
+  grid-template-columns: 24rem 1fr;
+  grid-template-rows: 1fr;
+  min-height: calc(100vh - 8rem);
+  background-color: $primary-light-5;
+  @include respondMax(75) {
+    grid-template-columns: 1fr;
+  }
+  @include respond(tab-portrait) {
+    padding: 3.2rem 2.4rem;
+  }
+  &__content {
+    padding: 3.2rem 0;
+    @include respond(tab-portrait) {
+      padding: 0;
+    }
+  }
+}

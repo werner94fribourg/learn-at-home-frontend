@@ -1,0 +1,93 @@
+@import '../../../../scss/abstracts/variables';
+
+.conversation {
+  display: grid;
+  grid-template-columns: min-content 23rem min-content;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.2rem;
+  background-color: $white;
+  position: relative;
+  padding: 1.5rem 1.2rem;
+  border-bottom: 1px solid $primary-light-6;
+  cursor: pointer;
+  &--active {
+    background-color: $primary-light-6;
+  }
+  &__photo {
+    width: 4.2rem;
+    height: 4.2rem;
+    border-radius: 50%;
+  }
+  &__description {
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.3rem;
+  }
+  &__username {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: $black-2;
+  }
+  &__content {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: #84818a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    &--unread {
+      color: $black-2;
+    }
+  }
+  &__sent-time {
+    position: absolute;
+    top: 1.4rem;
+    right: 1.2rem;
+  }
+  &__view {
+    align-self: flex-end;
+    position: relative;
+    display: block;
+    width: 2rem;
+    height: 2rem;
+    &--read {
+      svg {
+        color: $primary;
+      }
+    }
+  }
+  &__nb-unread {
+    align-self: flex-end;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    color: $white;
+    background-color: $primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  &__file {
+    width: 25px;
+    height: 20px;
+  }
+  &__check {
+    position: absolute;
+    top: 0;
+    height: 20px;
+    color: $black-3;
+    &--left {
+      right: 25%;
+      z-index: 1;
+    }
+    &--right {
+      right: 0;
+      z-index: 2;
+    }
+  }
+}

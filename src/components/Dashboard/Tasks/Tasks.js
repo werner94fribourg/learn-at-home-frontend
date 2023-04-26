@@ -24,6 +24,8 @@ const Tasks = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (!jwt) return;
+
     if (!tasks) getTasks(jwt, role, dispatch);
   }, [jwt, role, tasks, dispatch]);
 

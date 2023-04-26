@@ -1,9 +1,10 @@
 import './App.scss';
-import AppRouter from './components/Router/AppRouter';
+import AppRouter from './Router/AppRouter';
 import LoadingSpinner from './components/UI/LoadingSpinner/LoadingSpinner';
 import { initialize } from './store/slice/auth';
 import { getMe } from './store/slice/users';
-import { useEffect } from 'react';
+import { getSocket } from './utils/utils';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 /**
@@ -25,6 +26,16 @@ const App = () => {
 
     setup();
   }, [jwt, dispatch]);
+
+  const disconnectSocket = useCallback(event => {
+    event.preventDefault();
+    const socket = getSocket();
+    if (socket) socket.disconnect();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', disconnectSocket);
+  }, [disconnectSocket]);
 
   if (loading) return <LoadingSpinner />;
 
