@@ -26,6 +26,7 @@ const Events = () => {
 
   if (data && !data.authorized) {
     initialize('', dispatch);
+    localStorage.removeItem('jwt');
   }
 
   return (

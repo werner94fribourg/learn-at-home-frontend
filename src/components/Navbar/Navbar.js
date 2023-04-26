@@ -1,3 +1,4 @@
+import { initialize } from '../../store/slice/auth';
 import { navbarActions } from '../../store/slice/navbar';
 import { PROFILE_PICTURES_URL } from '../../utils/globals';
 import styles from './Navbar.module.scss';
@@ -40,6 +41,13 @@ const Navbar = props => {
   const openNavbarHandler = () => {
     dispatch(navbarActions.setOpenState());
   };
+
+  const logoutHandler = event => {
+    event.preventDefault();
+    initialize('', dispatch);
+    localStorage.removeItem('jwt');
+  };
+
   return (
     <nav className={styles.navbar} style={style}>
       <NavLink className={styles['navbar__brand']} to="/">
@@ -131,16 +139,17 @@ const Navbar = props => {
           <img src={`${PROFILE_PICTURES_URL}/${photo}`} alt="Profile" />
           <span className={styles['navbar__link-title']}> {username}</span>
         </NavLink>
-        <NavLink
+        <a
           className={`${styles['navbar__link']} ${styles['navbar__logout']}`}
-          to="/logout"
+          href="/logout"
+          onClick={logoutHandler}
         >
           <FontAwesomeIcon
             className={styles['navbar__link-icon']}
             icon={faArrowRightFromBracket}
           />
           <span className={styles['navbar__link-title']}> Logout</span>
-        </NavLink>
+        </a>
       </div>
     </nav>
   );
