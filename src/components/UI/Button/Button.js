@@ -8,9 +8,13 @@ import PropTypes from 'prop-types';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const Button = props => {
-  const { className, type, text } = props;
+  const { className, type, text, onClick } = props;
   return (
-    <button className={`${styles.button} ${className}`} type={type}>
+    <button
+      className={`${styles.button} ${className}`}
+      type={type}
+      onClick={onClick}
+    >
       {text}
     </button>
   );
@@ -23,6 +27,8 @@ Button.propTypes = {
   type: PropTypes.oneOf(['button', 'submit']),
   /** The text we want to display inside the button */
   text: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+  /** the click handler of the button */
+  onClick: PropTypes.func,
 };
 
 export default Button;

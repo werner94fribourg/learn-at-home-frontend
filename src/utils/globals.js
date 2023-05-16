@@ -40,6 +40,15 @@ export const SITE_URL = 'http://localhost:3000';
 export const USERS_URL = API_URL + '/users';
 
 /**
+ * URL of the users/{id} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SINGLE_USER_URL = USERS_URL + '/{id}';
+
+/**
  * URL of the users/login endpoint
  * @type {string}
  *
@@ -75,6 +84,61 @@ export const SUPERVISED_STUDENTS_URL = USERS_URL + '/supervised';
  */
 export const STATUS_URL = USERS_URL + '/{id}/status';
 
+/**
+ * URL of the users endpoint (including the query variables)
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const MEMBERS_URL =
+  USERS_URL +
+  '?sort=lastname,firstname&fields=username,firstname,lastname,photo&page={page}&limit={limit}';
+
+/**
+ * URL of the users/contacts endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const CONTACTS_URL = USERS_URL + '/contacts';
+
+/**
+ * URL of the users/contacts/{id} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const CONTACTS_WITH_ID_URL = CONTACTS_URL + '/{id}';
+
+/**
+ * URL of the users/invitations endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const INVITATIONS_URL = USERS_URL + '/invitations';
+
+/**
+ * URL of the users/invite endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const INVITE_URL = CONTACTS_WITH_ID_URL + '/invite';
+
+/**
+ * URL of the users/decline endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const DECLINE_INVITATION_URL = CONTACTS_WITH_ID_URL + '/decline';
 /**
  * URL of the message ressource in the backend
  * @type {string}

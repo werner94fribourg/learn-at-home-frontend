@@ -1,0 +1,160 @@
+@import '../../../scss/abstracts/variables';
+@import '../../../scss/abstracts/mixins';
+
+.notification {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: $white;
+  width: min(40rem, 100vw - 4.8rem);
+  padding: 2.4rem;
+  border-radius: 1.2rem;
+  &__background {
+    position: fixed;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    left: 0;
+    background-color: rgba($black-1, 0.7);
+    opacity: 0;
+    &-enter {
+      opacity: 0;
+    }
+    &-enter-active {
+      opacity: 1;
+      transition: opacity 500ms ease-in-out;
+      .notification {
+        transform: translate(-50%, -50%) scale(1);
+        transition: transform 500ms ease-in-out;
+      }
+    }
+    &-enter-done {
+      opacity: 1;
+      .notification {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    &-exit {
+      opacity: 1;
+      .notification {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    &-exit-active {
+      opacity: 0;
+      transition: opacity 500ms ease-in-out;
+      .notification {
+        transform: translate(-50%, -50%) scale(0);
+        transition: transform 500ms ease-in-out;
+      }
+    }
+    &-exit-done {
+      opacity: 0;
+      .notification {
+        transform: translate(-50%, -50%) scale(0);
+      }
+    }
+  }
+  &__picture-container {
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    border: 5px solid $grey-light-6;
+    background-color: $grey-light-7;
+    box-sizing: content-box;
+    overflow: hidden;
+    grid-row: 1 / 3;
+    position: relative;
+  }
+  &__picture {
+    height: 43px;
+    width: 43px;
+    position: absolute;
+    left: 9%;
+  }
+  &__header {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: repeat(2, min-content);
+    column-gap: 2.8rem;
+    row-gap: 0.7rem;
+    margin-bottom: 4.8rem;
+  }
+  &__title {
+    color: $primary;
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0;
+    align-self: flex-end;
+  }
+  &__receiver-text {
+    align-self: flex-start;
+    font-size: 1.2rem;
+    color: #787579;
+  }
+  &__receiver {
+    font-weight: bold;
+  }
+  &__status {
+    margin: 0;
+    margin-bottom: 1.6rem;
+    color: $black-1;
+    font-size: 1.4rem;
+    font-weight: 600;
+    &--success {
+      color: $green;
+    }
+    &--fail {
+      color: $primary;
+    }
+  }
+  &__message {
+    margin: 0;
+    color: $grey-light-5;
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 3.2rem;
+  }
+  &__close-btn {
+    position: absolute;
+    height: 2rem;
+    width: 2rem;
+    color: $black-1;
+    top: 1.7rem;
+    right: 1.7rem;
+  }
+  &__actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: min-content;
+    gap: 0.8rem;
+    padding-top: 1.6rem;
+    @include respond(tab-land) {
+      display: flex;
+      flex-flow: column nowrap;
+      gap: 1.2rem;
+    }
+  }
+  &__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.4rem;
+    height: 2.5rem;
+    border: 1px solid $primary;
+    @include respond(tab-land) {
+      height: 1.5rem;
+      padding: 1.8rem 1rem;
+    }
+    &--left {
+      border: 1px solid $grey-light-8;
+      background-color: $white;
+      color: $black-3;
+    }
+    &--right {
+      background-color: $primary;
+      color: $white;
+    }
+  }
+}

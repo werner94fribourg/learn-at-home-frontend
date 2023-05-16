@@ -3,14 +3,21 @@
  * @module api
  */
 import {
+  CONTACTS_URL,
+  CONTACTS_WITH_ID_URL,
   CONVERSATION_WITH_ID_URL,
+  DECLINE_INVITATION_URL,
   DONE_STUDENTS_TASKS_URL,
   EVENTS_URL,
+  INVITATIONS_URL,
+  INVITE_URL,
   LAST_URL,
   LAST_WITH_ID_URL,
   LOGIN_URL,
+  MEMBERS_URL,
   ME_URL,
   READ_URL,
+  SINGLE_USER_URL,
   STATUS_URL,
   SUPERVISED_STUDENTS_URL,
   TASKS_URL,
@@ -29,7 +36,7 @@ import { makeApiCall } from './utils';
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const login = async credentials => {
+export const login = credentials => {
   return makeApiCall(
     LOGIN_URL,
     {
@@ -57,7 +64,7 @@ export const login = async credentials => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getConnectedUser = async token => {
+export const getConnectedUser = token => {
   return makeApiCall(
     ME_URL,
     {
@@ -84,7 +91,7 @@ export const getConnectedUser = async token => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getTotalUnreadMessages = async token => {
+export const getTotalUnreadMessages = token => {
   return makeApiCall(
     UNREAD_URL,
     {
@@ -125,7 +132,7 @@ export const getTotalUnreadMessages = async token => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getEvents = async ({ token, page, limit }) => {
+export const getEvents = ({ token, page, limit }) => {
   return makeApiCall(
     `${EVENTS_URL}?page=${page}&limit=${limit}`,
     {
@@ -157,7 +164,7 @@ export const getEvents = async ({ token, page, limit }) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-const getTasks = async (token, url) => {
+const getTasks = (token, url) => {
   return makeApiCall(
     url,
     {
@@ -188,7 +195,7 @@ const getTasks = async (token, url) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getOwnTasks = async token => getTasks(token, TASKS_URL);
+export const getOwnTasks = token => getTasks(token, TASKS_URL);
 
 /**
  * Function used to retrieve the done tasks of the supervised students (teachers only)
@@ -198,7 +205,7 @@ export const getOwnTasks = async token => getTasks(token, TASKS_URL);
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getDoneStudentsTasks = async token =>
+export const getDoneStudentsTasks = token =>
   getTasks(token, DONE_STUDENTS_TASKS_URL);
 
 /**
@@ -209,7 +216,7 @@ export const getDoneStudentsTasks = async token =>
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getTodoStudentsTasks = async token =>
+export const getTodoStudentsTasks = token =>
   getTasks(token, TODO_STUDENTS_TASKS_URL);
 
 /**
@@ -220,7 +227,7 @@ export const getTodoStudentsTasks = async token =>
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getValidatedStudentsTasks = async token =>
+export const getValidatedStudentsTasks = token =>
   getTasks(token, VALIDATED_STUDENTS_TASKS_URL);
 
 /**
@@ -237,7 +244,7 @@ export const getValidatedStudentsTasks = async token =>
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getSupervisedStudents = async ({ token }) => {
+export const getSupervisedStudents = ({ token }) => {
   return makeApiCall(
     SUPERVISED_STUDENTS_URL,
     {
@@ -268,7 +275,7 @@ export const getSupervisedStudents = async ({ token }) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getLastMessages = async token => {
+export const getLastMessages = token => {
   return makeApiCall(
     LAST_URL,
     {
@@ -300,7 +307,7 @@ export const getLastMessages = async token => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getLastMessage = async (token, userId) => {
+export const getLastMessage = (token, userId) => {
   return makeApiCall(
     LAST_WITH_ID_URL.replace('{id}', userId),
     {
@@ -332,7 +339,7 @@ export const getLastMessage = async (token, userId) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getUnread = async (token, id) => {
+export const getUnread = (token, id) => {
   return makeApiCall(
     UNREAD_WITH_ID_URL.replace('{id}', id),
     {
@@ -368,7 +375,7 @@ export const getUnread = async (token, id) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getConversation = async (token, id, page = 1, limit = 10) => {
+export const getConversation = (token, id, page = 1, limit = 10) => {
   return makeApiCall(
     `${CONVERSATION_WITH_ID_URL.replace(
       '{id}',
@@ -378,7 +385,6 @@ export const getConversation = async (token, id, page = 1, limit = 10) => {
       method: 'GET',
       mode: 'cors',
       headers: {
-        'Access-Control-Allow-Origin': 'https://localhost:3000',
         'Content-Type': 'application/json',
         accept: 'application/json',
         Authorization: `Bearer ${token}`,
@@ -404,7 +410,7 @@ export const getConversation = async (token, id, page = 1, limit = 10) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const readMessage = async (token, messageId) => {
+export const readMessage = (token, messageId) => {
   return makeApiCall(
     READ_URL.replace('{id}', messageId),
     {
@@ -437,7 +443,7 @@ export const readMessage = async (token, messageId) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const sendMessage = async (token, id, content) => {
+export const sendMessage = (token, id, content) => {
   return makeApiCall(
     CONVERSATION_WITH_ID_URL.replace('{id}', id),
     {
@@ -472,7 +478,7 @@ export const sendMessage = async (token, id, content) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const sendMessageWithFiles = async (token, id, formData) => {
+export const sendMessageWithFiles = (token, id, formData) => {
   return makeApiCall(
     CONVERSATION_WITH_ID_URL.replace('{id}', id),
     {
@@ -505,7 +511,7 @@ export const sendMessageWithFiles = async (token, id, formData) => {
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const getConnectionStatus = async (token, userId) => {
+export const getConnectionStatus = (token, userId) => {
   return makeApiCall(
     STATUS_URL.replace('{id}', userId),
     {
@@ -523,6 +529,247 @@ export const getConnectionStatus = async (token, userId) => {
       } = data;
 
       return { valid: true, authorized: true, connected };
+    }
+  );
+};
+
+/**
+ * Function used to get the list of members participating in the platform
+ * @param {string} token the jwt token of the logged user
+ * @param {number} page the page number of the list of members we want to retrieve
+ * @param {number} limit the number of user we want to retrieve per page
+ * @returns {Promise<Object>} a promise containing the list of participating members
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getAllMembers = (token, page, limit = 12) => {
+  return makeApiCall(
+    MEMBERS_URL.replace('{page}', page).replace('{limit}', limit),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+      } = data;
+
+      return { valid: true, authorized: true, users };
+    }
+  );
+};
+
+/**
+ * Function used to retrieve a single user from the backend
+ * @param {string} id the id of the user we want to retrieve
+ * @returns {Promise<Object>} a promise containing the user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getUser = id => {
+  return makeApiCall(
+    SINGLE_USER_URL.replace('{id}', id),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { user },
+      } = data;
+
+      return { valid: true, authorized: true, user };
+    }
+  );
+};
+/**
+ * Function used to retrieve the list of contacts of the connected user
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the list of the contacts of the logged user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getAllContacts = token => {
+  return makeApiCall(
+    CONTACTS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+      } = data;
+
+      return { valid: true, authorized: true, users };
+    }
+  );
+};
+
+/**
+ * Function used to get all the users that has sent a contact invitation to the connected user
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the list of users that has sent an invitation to the connected user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getAllInvitations = token => {
+  return makeApiCall(
+    INVITATIONS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+      } = data;
+
+      return { valid: true, authorized: true, users };
+    }
+  );
+};
+
+/**
+ * Function used to send a contact invitation to another user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user to which we want to send a contact invitation
+ * @returns {Promise<Object>} a promise containing a message informing the logged user of the status of the invitation sending
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const sendInvitation = (token, userId) => {
+  return makeApiCall(
+    INVITE_URL.replace('{id}', userId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const { message } = data;
+
+      return { valid: true, authorized: true, message };
+    }
+  );
+};
+
+/**
+ * Function used to decline a contact invitation from another user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user to which we want to decline the invitation
+ * @returns {Promise<Object>} a promise containing a message informing the result of the refusal process
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const declineInvitation = (token, userId) => {
+  return makeApiCall(
+    DECLINE_INVITATION_URL.replace('{id}', userId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const { message } = data;
+
+      return { valid: true, authorized: true, message };
+    }
+  );
+};
+
+/**
+ * Function use to accept a contact invitation and add the sender to the logged user's contacts
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user the logged user wants to add in his contact list
+ * @returns {Promise<Object>} a promise containing the array of updated contacts
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const addContact = (token, userId) => {
+  return makeApiCall(
+    CONTACTS_WITH_ID_URL.replace('{id}', userId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+      } = data;
+
+      return { valid: true, authorized: true, users };
+    }
+  );
+};
+
+/**
+ * Function used to remove an user from the contact list of the connected user
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user the logged user wants to remove from his contact list
+ * @returns {Promise<Object>} a promise containing the array of updated contacts
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const removeContact = (token, userId) => {
+  return makeApiCall(
+    CONTACTS_WITH_ID_URL.replace('{id}', userId),
+    {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+        message,
+      } = data;
+
+      return { valid: true, authorized: true, users, message };
     }
   );
 };

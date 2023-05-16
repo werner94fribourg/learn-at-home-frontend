@@ -41,9 +41,8 @@ const Messages = props => {
   const scrollHandler = async event => {
     const scrollPosition = Math.abs(event.target.scrollTop);
     const maxScroll = event.target.scrollHeight - event.target.clientHeight;
-    if (scrollPosition >= maxScroll - 20 && !loadPage && page !== -1) {
+    if (scrollPosition >= maxScroll - 20 && !loadPage && page !== -1)
       await getMessages(jwt, activeUser, dispatch, page);
-    }
   };
   return (
     <div className={className} onScroll={scrollHandler}>
