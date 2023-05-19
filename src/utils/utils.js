@@ -138,3 +138,15 @@ export const makeApiCall = async (url, fetchObj, returnData, code = 200) => {
     return getUnknowErrorObject();
   }
 };
+
+/**
+ * Function used to check if a given user is a contact of the connected user
+ * @param {string} id the id of the user we want to check if he is a contact
+ * @param {Object[]} contacts the array of contacts of the connected user
+ * @returns {boolean} true if the requested user is a contact, false otherwise
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const isContact = (id, contacts) =>
+  contacts.filter(user => user._id === id).length > 0;

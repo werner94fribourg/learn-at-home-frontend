@@ -1,5 +1,6 @@
 import Layout from '../components/Layout/Layout';
 import MessageNotification from '../components/UI/MessageNotification/MessageNotification';
+import Notification from '../components/UI/Notification/Notification';
 import TeachingDemands from '../pages/TeachingDemands';
 import { logout } from '../store/slice/auth';
 import {
@@ -9,7 +10,13 @@ import {
   receiveMessage,
   incrementConversationUnread,
 } from '../store/slice/messages';
-import { setUserConnectionStatus } from '../store/slice/users';
+import {
+  addUserToContactList,
+  invitationAccepted,
+  receiveInvitation,
+  removeUserFromContactList,
+  setUserConnectionStatus,
+} from '../store/slice/users';
 import { getSocket, setSocket } from '../utils/utils';
 import loadable from '@loadable/component';
 import { Fragment, useEffect } from 'react';
@@ -34,6 +41,7 @@ const ProfileRouter = () => {
     users: {
       me: { _id: userId },
       activeUser: { id: activeUser },
+      notificationData,
     },
     messages: { notification },
   } = useSelector(state => state);
@@ -73,10 +81,37 @@ const ProfileRouter = () => {
 
         if (activeUser === userId) setUserConnectionStatus(connected, dispatch);
       });
+      socket.on('receive_invitation', invitation => {
+        const { sender, receiver } = invitation;
+
+        if (receiver.id !== userId) return;
+
+        receiveInvitation(sender, dispatch);
+        // get all invitations
+      });
+      socket.on('invitation_accepted', async invitation => {
+        const { sender, receiver } = invitation;
+
+        if (sender.id !== userId) return;
+
+        invitationAccepted(receiver, dispatch);
+        const authorized = await addUserToContactList(receiver.id, dispatch);
+        if (!authorized) logout(dispatch);
+      });
+      socket.on('contact_removed', data => {
+        const { sender, receiver } = data;
+
+        if (receiver !== userId) return;
+
+        removeUserFromContactList(sender, dispatch);
+      });
     }
     return () => {
       socket?.off('receive_message');
       socket?.off('notify_connection');
+      socket?.off('receive_invitation');
+      socket?.off('invitation_accepted');
+      socket?.off('contact_removed');
     };
   }, [jwt, userId, activeUser, dispatch, pathname]);
 
@@ -88,13 +123,24 @@ const ProfileRouter = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/conversations" element={<Conversations />} />
           <Route path="/teaching" element={<TeachingDemands />} />
-          <Route path="/members" element={<Members />} />
+          <Route path="/members/*" element={<Members />} />
           <Route path="*" element={<Navigate to="/" replace />} replace />
         </Routes>
       </Layout>
       {notification &&
         createPortal(
           <MessageNotification message={notification} />,
+          document.querySelector('#root')
+        )}
+      {notificationData &&
+        createPortal(
+          <Notification
+            userId={notificationData.id}
+            username={notificationData.username}
+            message={notificationData.message}
+            status={notificationData.valid}
+            type={notificationData.type}
+          />,
           document.querySelector('#root')
         )}
     </Fragment>

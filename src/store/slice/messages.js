@@ -78,23 +78,35 @@ const messagesSlice = createSlice({
       });
 
       if (conversation) {
+        conversation._id = message._id;
         conversation.sender = message.sender;
         conversation.receiver = message.receiver;
         conversation.sent = message.sent;
         conversation.files = message.files;
         conversation.content = message.content;
         conversation.read = message.read;
-      }
+      } else state.lasts.push(message);
 
       const displayedConversation = state.displayed?.find(mess => {
         return mess.sender === userId || mess.receiver === userId;
       });
 
       if (displayedConversation) {
+        displayedConversation._id = message._id;
+        displayedConversation.sender = message.sender;
+        displayedConversation.receiver = message.receiver;
         displayedConversation.sent = message.sent;
         displayedConversation.files = message.files;
         displayedConversation.content = message.content;
         displayedConversation.read = message.read;
+      } else {
+        const {
+          _id: { sender, receiver },
+        } = message;
+        const username = message.sender === userId ? sender : receiver;
+
+        if (username.includes(state.searchedUsername))
+          state.displayed.push(message);
       }
     },
     setConversationStatus(state, action) {
@@ -328,7 +340,7 @@ export const getMessages = async (
 /**
  * Function used to handle the selection of a conversation and change its status to read
  * @param {Object} user the user for which we selected a conversation
- * @param {*} dispatch the dispatcher function used to modify the store
+ * @param {Function} dispatch the dispatcher function used to modify the store
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -471,6 +483,15 @@ export const setConversationUnread = (sender, receiver, count, dispatch) => {
   );
 };
 
+/**
+ * Function used to increment the total of unread messages in a specific conversation
+ * @param {string} sender the id of the sender of the last message
+ * @param {string} receiver the id of the receiver of the last message
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
 export const incrementConversationUnread = (sender, receiver, dispatch) => {
   dispatch(
     messagesActions.incrementTotalUnreadConversation({ sender, receiver })

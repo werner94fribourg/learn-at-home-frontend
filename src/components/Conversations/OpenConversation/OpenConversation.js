@@ -123,9 +123,9 @@ const OpenConversation = () => {
   return (
     <div className={styles['open-conversation']}>
       <div className={styles['open-conversation__user']}>
-        <h2 className={styles['open-conversation__username']}>
+        <h3 className={styles['open-conversation__username']}>
           {activeUsername}
-        </h2>
+        </h3>
         <span className={statusClassNames}>
           {online ? 'Online' : 'Offline'}
         </span>

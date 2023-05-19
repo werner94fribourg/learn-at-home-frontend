@@ -24,7 +24,15 @@ const SideNav = () => {
   return (
     <nav className={styles.sidenav}>
       <h1 style={{ visibility: 'hidden', position: 'absolute' }}>
-        {pathname === '/conversations' ? 'Conversations' : 'Members'}
+        {pathname === '/conversations'
+          ? 'Conversations'
+          : `Members - ${
+              pathname === '/members/all'
+                ? 'All participants'
+                : pathname === '/members/contacts'
+                ? 'My contacts'
+                : 'Invitations'
+            }`}
       </h1>
       <NavLink
         className={`${styles['sidenav__link']} ${styles['sidenav__link--profile']}`}
