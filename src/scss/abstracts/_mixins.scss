@@ -71,7 +71,7 @@ $breakpoint values :
     padding: 1.2rem 1rem;
     width: 15rem;
     @include respond(mobile) {
-      width: 95%;
+      width: calc(100% - 2.4rem);
     }
   }
   &__list {

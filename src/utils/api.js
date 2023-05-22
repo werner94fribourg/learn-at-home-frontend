@@ -2,7 +2,11 @@
  * Store of all global api functions used in the application
  * @module api
  */
+import { SEND_TEACHING_DEMAND_URL, SUPERVISED_STATUS_URL } from './globals';
 import {
+  ACCEPT_DEMAND_URL,
+  AVAILABLE_TEACHERS_URL,
+  CANCEL_DEMAND_URL,
   CONTACTS_URL,
   CONTACTS_WITH_ID_URL,
   CONVERSATION_WITH_ID_URL,
@@ -21,6 +25,7 @@ import {
   STATUS_URL,
   SUPERVISED_STUDENTS_URL,
   TASKS_URL,
+  TEACHING_DEMANDS_URL,
   TODO_STUDENTS_TASKS_URL,
   UNREAD_URL,
   UNREAD_WITH_ID_URL,
@@ -770,6 +775,182 @@ export const removeContact = (token, userId) => {
       } = data;
 
       return { valid: true, authorized: true, users, message };
+    }
+  );
+};
+
+/**
+ * Function used to get the teaching demands sent to (teacher) / by (student) the logged user
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the array of teaching demands of the logged user
+ */
+export const getAllTeachingDemands = token => {
+  return makeApiCall(
+    TEACHING_DEMANDS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { teachingDemands: demands },
+      } = data;
+
+      return { valid: true, authorized: true, demands };
+    }
+  );
+};
+
+/**
+ * Function used, for a logged student, to send a teaching demand to a teacher
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the user to which we want to send a teaching demand
+ * @returns {Promise<Object>} the new created teaching demand sent to the other user
+ */
+export const sendTeachingDemand = (token, userId) => {
+  return makeApiCall(
+    SEND_TEACHING_DEMAND_URL.replace('{userId}', userId),
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { teachingDemand: demand },
+      } = data;
+
+      return { valid: true, authorized: true, demand };
+    },
+    201
+  );
+};
+
+/**
+ * Function used, for a teacher, to accept a teaching demand from a student
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the teaching demand we want to accept
+ * @returns {Promise<Object>} the accepted teaching demand
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const acceptTeachingDemand = (token, id) => {
+  return makeApiCall(
+    ACCEPT_DEMAND_URL.replace('{id}', id),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { teachingDemand: demand },
+      } = data;
+
+      return { valid: true, authorized: true, demand };
+    }
+  );
+};
+
+/**
+ * Function used, for a teacher, to cancel a teaching demand from a student
+ * @param {string} token the jwt token of the logged user
+ * @param {string} id the teaching demand we want to accept
+ * @returns {Promise<Object>} the cancelled teaching demand
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const cancelTeachingDemand = (token, id) => {
+  return makeApiCall(
+    CANCEL_DEMAND_URL.replace('{id}', id),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { teachingDemand: demand },
+      } = data;
+
+      return { valid: true, authorized: true, demand };
+    }
+  );
+};
+
+/**
+ * Function used to get, for a connected student, all the teachers to which he hasn't send a teaching request
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the available teachers
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getAvailableTeachers = token => {
+  return makeApiCall(
+    AVAILABLE_TEACHERS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { teachers },
+      } = data;
+
+      return { valid: true, authorized: true, teachers };
+    }
+  );
+};
+
+/**
+ * Function used to get the supervision status of the logged user (for students only)
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the supervision status of the logged student
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getSupervisedStatus = token => {
+  return makeApiCall(
+    SUPERVISED_STATUS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const { supervised } = data;
+
+      return { valid: true, authorized: true, supervised };
     }
   );
 };

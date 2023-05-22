@@ -1,0 +1,54 @@
+@import '../../../scss/abstracts/mixins';
+@import '../../../scss/abstracts/variables';
+
+.demand-list {
+  font-size: 1.6rem;
+  color: $black-2;
+  width: calc(100% - 2.4rem);
+  min-width: 43.75rem;
+  @include respond(tab-portrait) {
+    width: 100%;
+  }
+  &__head {
+    background-color: $grey-light-6;
+  }
+  &__head-row {
+    th {
+      border-top: 1px solid $primary;
+      border-bottom: 1px solid $primary;
+    }
+  }
+  &__cell {
+    padding: 1rem;
+    text-align: left;
+    &--action {
+      text-align: center;
+    }
+    &:first-child {
+      border-left: 1px solid $primary;
+      border-right: 1px solid $primary;
+    }
+    &:last-child {
+      border-right: 1px solid $primary;
+    }
+    &[scope='col'],
+    &[scope='row'] {
+      color: $primary;
+      font-weight: bold;
+    }
+    &--action {
+      text-align: center;
+    }
+  }
+  &__empty-message {
+    color: $primary;
+    text-align: center;
+    padding: 1rem;
+  }
+  &__body {
+    border: 1px solid $primary;
+  }
+  @include respond(tab-portrait) {
+    order: 1;
+  }
+}

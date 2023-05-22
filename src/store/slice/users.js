@@ -10,6 +10,7 @@ import {
   getAllMembers,
   getConnectedUser,
   getConnectionStatus,
+  getSupervisedStatus,
   getUser,
   removeContact,
   sendInvitation,
@@ -61,6 +62,7 @@ import { createSlice } from '@reduxjs/toolkit';
  * @property {boolean} invitationsLoading - the loading status of getting the list of invitations
  * @property {boolean} loadPage - the loading state of the application when retrieving older users pages
  * @property {NotificationData} notificationData - the data we want to display in the notification
+ * @property {boolean} supervised - the supervision status of the user (used for connected students)
  *
  * The initial state for the tasks store of the user
  * @type {UsersInitialState}
@@ -90,6 +92,7 @@ const initialState = {
   invitationsLoading: false,
   loadPage: false,
   notificationData: undefined,
+  supervised: true,
 };
 
 /**
@@ -184,6 +187,10 @@ const usersSlice = createSlice({
     setNotification(state, action) {
       const { payload: data } = action;
       state.notificationData = data;
+    },
+    setSupervised(state, action) {
+      const { payload: status } = action;
+      state.supervised = status;
     },
   },
 });
@@ -323,7 +330,7 @@ export const getContacts = async (token, dispatch) => {
  * Async function used to get all the users that sent an invitation to the connected user
  * @param {string} token the jwt token of the connected user
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of retrieving the invitations and the authorization status
+ * @returns {Promise<boolean>} false if the request generated an authorization status code from the server, true otherwise
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -514,9 +521,10 @@ export const removeUserFromContactList = (userId, dispatch) => {
 };
 
 /**
- * Function used to add an user to the logged one's contact list
+ * Async function used to add an user to the logged one's contact list
  * @param {string} userId the id of the user we want to add to the contact's list
  * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<boolean>} false if the request generated an authorization status code from the server, true otherwise
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -528,4 +536,33 @@ export const addUserToContactList = async (userId, dispatch) => {
   if (valid) dispatch(usersActions.addContact(user));
   dispatch(usersActions.setContactsLoading(false));
   return authorized;
+};
+
+/**
+ * Async function used to get the supervision status of the connected student
+ * @param {string} token the jwt token of the connected user
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<boolean>} false if the request generated an authorization status code from the server, true otherwise
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getSupervision = async (token, dispatch) => {
+  const { valid, authorized, supervised } = await getSupervisedStatus(token);
+
+  if (valid) dispatch(usersActions.setSupervised(supervised));
+
+  return authorized;
+};
+
+/**
+ * Function used to modify the supervision status of the connected user
+ * @param {boolean} status the new supervision status of the connected student
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const setSupervisionStatus = (status, dispatch) => {
+  dispatch(usersActions.setSupervised(status));
 };

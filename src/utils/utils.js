@@ -150,3 +150,10 @@ export const makeApiCall = async (url, fetchObj, returnData, code = 200) => {
  */
 export const isContact = (id, contacts) =>
   contacts.filter(user => user._id === id).length > 0;
+
+/**
+ * Function used to generate the display text for a teaching demand status (cancelled or accepted) in the demand's list
+ * @param {boolean} status the status of the teaching demand cell
+ * @returns {string} 'Yes' if the status is true, 'No' otherwise
+ */
+export const generatedDemandCellText = status => (status ? 'Yes' : 'No');
