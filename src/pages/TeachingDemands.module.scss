@@ -1,3 +1,13 @@
+@import '../scss/abstracts/mixins';
+
 .teaching {
   z-index: 100;
+  width: 100%;
+  overflow-x: auto;
+  padding-left: 2.4rem;
+  display: flex;
+  flex-flow: column nowrap;
+  @include respond(tab-portrait) {
+    padding-left: 0;
+  }
 }

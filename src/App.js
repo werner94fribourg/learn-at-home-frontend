@@ -1,5 +1,5 @@
 import './App.scss';
-import AppRouter from './Router/AppRouter';
+import AppRouter from './routers/AppRouter';
 import LoadingSpinner from './components/UI/LoadingSpinner/LoadingSpinner';
 import { initialize } from './store/slice/auth';
 import { getMe } from './store/slice/users';

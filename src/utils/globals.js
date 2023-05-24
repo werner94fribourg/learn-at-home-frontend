@@ -139,6 +139,7 @@ export const INVITE_URL = CONTACTS_WITH_ID_URL + '/invite';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const DECLINE_INVITATION_URL = CONTACTS_WITH_ID_URL + '/decline';
+
 /**
  * URL of the message ressource in the backend
  * @type {string}
@@ -264,3 +265,67 @@ export const DONE_STUDENTS_TASKS_URL = STUDENTS_TASKS_URL + '/done';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const TODO_STUDENTS_TASKS_URL = STUDENTS_TASKS_URL + '/todo';
+
+/**
+ * URL of the teaching demand ressource in the backend
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const TEACHING_DEMANDS_URL = API_URL + '/teaching-demands';
+
+/**
+ * URL of the teaching-demands/available-teachers endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const AVAILABLE_TEACHERS_URL =
+  TEACHING_DEMANDS_URL + '/available-teachers';
+
+/**
+ * URL of the teaching-demands/{id} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SINGLE_TEACHING_DEMAND_URL = TEACHING_DEMANDS_URL + '/{id}';
+
+/**
+ * URL of the teaching-demands/{id}/accept endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const ACCEPT_DEMAND_URL = SINGLE_TEACHING_DEMAND_URL + '/accept';
+
+/**
+ * URL of the teaching-demands/{id}/cancel endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const CANCEL_DEMAND_URL = SINGLE_TEACHING_DEMAND_URL + '/cancel';
+
+/**
+ * URL of the teaching-demands/user/{userId} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SEND_TEACHING_DEMAND_URL = TEACHING_DEMANDS_URL + '/user/{userId}';
+
+/**
+ * URL of the teaching-demands/is-supervised endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SUPERVISED_STATUS_URL = TEACHING_DEMANDS_URL + '/is-supervised';

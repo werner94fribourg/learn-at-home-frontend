@@ -1,0 +1,78 @@
+@import '../../../scss/abstracts/variables';
+
+.select {
+  font-size: 1.6rem;
+  position: relative;
+  border: 1px solid $grey-light-1;
+  &__list {
+    display: none;
+  }
+  &__options {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 110%;
+    background-color: $primary-light-2;
+    &-enter {
+      transform: scaleY(0);
+    }
+    &-enter-active {
+      transform: scaleY(1);
+      transform-origin: top left;
+      transition: transform 500ms ease-in-out;
+    }
+    &-enter-done {
+      transform: scaleY(1);
+      transform-origin: top left;
+    }
+    &-exit {
+      transform: scaleY(1);
+    }
+    &-exit-active {
+      transform: scaleY(0);
+      transform-origin: top left;
+      transition: transform 500ms ease-in-out;
+    }
+    &-exit-done {
+      transform: scaleY(0);
+      transform-origin: bottom left;
+    }
+  }
+  &__option {
+    color: $white;
+    padding: 1rem;
+    border-bottom: 1px solid $primary;
+    position: relative;
+    z-index: 0;
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: $primary;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+    }
+    &:hover {
+      &::after {
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+      }
+    }
+  }
+  &__icon {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%);
+    color: $black-2;
+    transition: transform 0.5s ease-in-out;
+    &.clicked {
+      transform: translateY(-50%) rotate(180deg);
+      transition: transform 0.5s ease-in-out;
+    }
+  }
+}

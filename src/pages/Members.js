@@ -1,5 +1,5 @@
-import MembersRouter from '../Router/MembersRouter';
 import SideNav from '../components/SideNav/SideNav';
+import MembersRouter from '../routers/MembersRouter';
 import { getMembers } from '../store/slice/users';
 import styles from './Layout.module.scss';
 import membersStyles from './Members.module.scss';

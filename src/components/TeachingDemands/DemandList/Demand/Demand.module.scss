@@ -1,0 +1,51 @@
+@import '../../../../scss/abstracts/variables';
+
+.demand {
+  &__cell {
+    padding: 1rem;
+    text-align: left;
+    &--action {
+      text-align: center;
+    }
+    &:first-child {
+      border-left: 1px solid $primary;
+      border-right: 1px solid $primary;
+    }
+    &:last-child {
+      border-right: 1px solid $primary;
+    }
+    &[scope='col'],
+    &[scope='row'] {
+      color: $primary;
+      font-weight: bold;
+    }
+    &--action {
+      text-align: center;
+    }
+  }
+  &__row {
+    &:last-of-type {
+      th,
+      td {
+        border-bottom: 1px solid $primary;
+      }
+    }
+    &--accepted {
+      background-color: rgba($green, 0.6);
+    }
+    &--cancelled {
+      background-color: rgba($primary-light-1, 0.6);
+    }
+  }
+  &__action {
+    height: 2.5rem;
+    width: 2.5rem;
+    cursor: pointer;
+    &--accept {
+      color: $green;
+    }
+    &--cancel {
+      color: $primary-dark;
+    }
+  }
+}

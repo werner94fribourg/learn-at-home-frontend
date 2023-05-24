@@ -6,6 +6,7 @@ import authReducer from './slice/auth';
 import messagesReducer from './slice/messages';
 import navbarReducer from './slice/navbar';
 import tasksReducer from './slice/tasks';
+import teachingDemandsReducer from './slice/teaching-demands';
 import usersReducer from './slice/users';
 import { configureStore } from '@reduxjs/toolkit';
 
@@ -23,6 +24,7 @@ const store = configureStore({
     users: usersReducer,
     messages: messagesReducer,
     tasks: tasksReducer,
+    demands: teachingDemandsReducer,
   },
 });
 

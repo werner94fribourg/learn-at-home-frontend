@@ -1,14 +1,20 @@
 import { logout } from '../../../store/slice/auth';
 import {
+  acceptDemand,
+  cancelDemand,
+  closeNotification as closeDemandNotification,
+} from '../../../store/slice/teaching-demands';
+import {
   acceptInvitation,
   addUserToContactList,
-  closeNotification,
+  closeNotification as closeUserNotification,
   decline,
 } from '../../../store/slice/users';
 import { getSocket } from '../../../utils/utils';
 import Button from '../Button/Button';
 import styles from './Notification.module.scss';
 import {
+  faPersonChalkboard,
   faUserMinus,
   faUserPlus,
   faXmark,
@@ -20,7 +26,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CSSTransition } from 'react-transition-group';
 
 /**
- * Component representing a notification in the members, contacts and invitations pages
+ * Component representing a notification in the application (contact invitation, event, teaching demand, ...)
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -53,6 +59,14 @@ const Notification = props => {
       icon = faUserPlus;
       sender = false;
       break;
+    case 'receive_teaching_demand':
+      icon = faPersonChalkboard;
+      sender = false;
+      break;
+    case 'teaching_demand_accepted':
+      icon = faPersonChalkboard;
+      sender = false;
+      break;
     default:
       break;
   }
@@ -72,7 +86,8 @@ const Notification = props => {
   const closeHandler = () => {
     setVisible(false);
     setTimeout(() => {
-      closeNotification(dispatch);
+      closeUserNotification(dispatch);
+      closeDemandNotification(dispatch);
     }, 500);
   };
 
@@ -89,11 +104,10 @@ const Notification = props => {
       await addUserToContactList(userId, dispatch);
       setVisible(false);
       setTimeout(() => {
-        closeNotification(dispatch);
+        closeUserNotification(dispatch);
       }, 500);
     }
   };
-
   const refuseContactHandler = async () => {
     const authorized = await decline(jwt, userId, dispatch);
 
@@ -103,13 +117,43 @@ const Notification = props => {
 
     setVisible(false);
     setTimeout(() => {
-      closeNotification(dispatch);
+      closeUserNotification(dispatch);
+    }, 500);
+  };
+
+  const acceptDemandHandler = async () => {
+    const [authorized, demand] = await acceptDemand(jwt, userId, dispatch);
+    if (!authorized) {
+      logout(dispatch);
+      return;
+    }
+    socket.emit('accept_teaching_demand', demand);
+    setTimeout(() => {
+      closeDemandNotification(dispatch);
+    }, 500);
+  };
+
+  const cancelDemandHandler = async () => {
+    const [authorized, demand] = await cancelDemand(jwt, userId, dispatch);
+    if (!authorized) {
+      logout(dispatch);
+      return;
+    }
+    socket.emit('cancel_teaching_demand', demand);
+    setTimeout(() => {
+      closeDemandNotification(dispatch);
     }, 500);
   };
 
   const notificationClickHandler = event => {
     event.stopPropagation();
   };
+
+  const acceptHandler =
+    type === 'receive_invitation' ? acceptContactHandler : acceptDemandHandler;
+
+  const refuseHandler =
+    type === 'receive_invitation' ? refuseContactHandler : cancelDemandHandler;
 
   return (
     <CSSTransition
@@ -160,19 +204,20 @@ const Notification = props => {
             icon={faXmark}
             onClick={closeHandler}
           />
-          {type === 'receive_invitation' && (
+          {(type === 'receive_invitation' ||
+            type === 'receive_teaching_demand') && (
             <div className={styles['notification__actions']}>
               <Button
                 className={`${styles['notification__action']} ${styles['notification__action--left']}`}
                 text="Refuse"
                 type="button"
-                onClick={refuseContactHandler}
+                onClick={refuseHandler}
               />
               <Button
                 className={`${styles['notification__action']} ${styles['notification__action--right']}`}
                 text="Accept"
                 type="button"
-                onClick={acceptContactHandler}
+                onClick={acceptHandler}
               />
             </div>
           )}

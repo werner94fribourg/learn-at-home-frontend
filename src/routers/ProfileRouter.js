@@ -11,11 +11,19 @@ import {
   incrementConversationUnread,
 } from '../store/slice/messages';
 import {
+  cancelDemandInStore,
+  demandAccepted,
+  demandCancelled,
+  receiveTeachingDemand,
+} from '../store/slice/teaching-demands';
+import {
   addUserToContactList,
   invitationAccepted,
   receiveInvitation,
   removeUserFromContactList,
   setUserConnectionStatus,
+  getSupervision,
+  setSupervisionStatus,
 } from '../store/slice/users';
 import { getSocket, setSocket } from '../utils/utils';
 import loadable from '@loadable/component';
@@ -39,15 +47,22 @@ const ProfileRouter = () => {
   const {
     auth: { jwt },
     users: {
-      me: { _id: userId },
+      me: { _id: userId, role },
       activeUser: { id: activeUser },
-      notificationData,
+      notificationData: usersNotificationData,
     },
     messages: { notification },
+    demands: { notificationData: demandsNotificationData },
   } = useSelector(state => state);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   if (!getSocket() && userId) setSocket(userId);
+
+  useEffect(() => {
+    if (role === 'student') {
+      getSupervision(jwt, dispatch);
+    }
+  }, [jwt, role, dispatch]);
 
   useEffect(() => {
     const socket = getSocket();
@@ -87,7 +102,6 @@ const ProfileRouter = () => {
         if (receiver.id !== userId) return;
 
         receiveInvitation(sender, dispatch);
-        // get all invitations
       });
       socket.on('invitation_accepted', async invitation => {
         const { sender, receiver } = invitation;
@@ -105,6 +119,31 @@ const ProfileRouter = () => {
 
         removeUserFromContactList(sender, dispatch);
       });
+      socket.on('receive_teaching_demand', demand => {
+        const { receiver } = demand;
+
+        if (receiver._id !== userId) return;
+
+        receiveTeachingDemand(demand, dispatch);
+      });
+      socket.on('teaching_demand_accepted', demand => {
+        const { sender } = demand;
+
+        if (sender._id !== userId) return;
+
+        demandAccepted(demand, dispatch);
+        setSupervisionStatus(true, dispatch);
+      });
+      socket.on('teaching_demand_cancelled', demand => {
+        const { sender } = demand;
+
+        if (sender._id !== userId) {
+          if (role === 'teacher') cancelDemandInStore(sender._id, dispatch);
+          return;
+        }
+
+        demandCancelled(demand, dispatch);
+      });
     }
     return () => {
       socket?.off('receive_message');
@@ -112,8 +151,11 @@ const ProfileRouter = () => {
       socket?.off('receive_invitation');
       socket?.off('invitation_accepted');
       socket?.off('contact_removed');
+      socket?.off('receive_teaching_demand');
+      socket?.off('teaching_demand_accepted');
+      socket?.off('teaching_demand_cancelled');
     };
-  }, [jwt, userId, activeUser, dispatch, pathname]);
+  }, [jwt, userId, role, activeUser, dispatch, pathname]);
 
   return (
     <Fragment>
@@ -132,14 +174,25 @@ const ProfileRouter = () => {
           <MessageNotification message={notification} />,
           document.querySelector('#root')
         )}
-      {notificationData &&
+      {usersNotificationData &&
         createPortal(
           <Notification
-            userId={notificationData.id}
-            username={notificationData.username}
-            message={notificationData.message}
-            status={notificationData.valid}
-            type={notificationData.type}
+            userId={usersNotificationData.id}
+            username={usersNotificationData.username}
+            message={usersNotificationData.message}
+            status={usersNotificationData.valid}
+            type={usersNotificationData.type}
+          />,
+          document.querySelector('#root')
+        )}
+      {demandsNotificationData &&
+        createPortal(
+          <Notification
+            userId={demandsNotificationData.id}
+            username={demandsNotificationData.username}
+            message={demandsNotificationData.message}
+            status={demandsNotificationData.valid}
+            type={demandsNotificationData.type}
           />,
           document.querySelector('#root')
         )}
