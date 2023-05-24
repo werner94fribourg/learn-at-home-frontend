@@ -3,6 +3,7 @@
  * @module store
  */
 import authReducer from './slice/auth';
+import calendarReducer from './slice/calendar';
 import messagesReducer from './slice/messages';
 import navbarReducer from './slice/navbar';
 import tasksReducer from './slice/tasks';
@@ -25,6 +26,7 @@ const store = configureStore({
     messages: messagesReducer,
     tasks: tasksReducer,
     demands: teachingDemandsReducer,
+    calendar: calendarReducer,
   },
 });
 

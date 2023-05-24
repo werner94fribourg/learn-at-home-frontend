@@ -28,6 +28,7 @@ const Layout = props => {
 };
 
 Layout.propTypes = {
+  /** the child component accepted by the Layout one */
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,

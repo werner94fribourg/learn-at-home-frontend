@@ -1,0 +1,24 @@
+@import '../../../../scss/abstracts/mixins';
+
+.event-list {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6rem;
+  margin-top: 2rem;
+  margin-right: 1rem;
+  @include respondMax(85) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include respondMax(71.65) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include respond(tab-land) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @include respond(mobile) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @include respondMax(26.5) {
+    grid-template-columns: 1fr;
+  }
+}

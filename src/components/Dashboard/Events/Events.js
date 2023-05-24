@@ -1,5 +1,6 @@
 import { logout } from '../../../store/slice/auth';
 import { getEvents } from '../../../utils/api';
+import { isGuest } from '../../../utils/utils';
 import Button from '../../UI/Button/Button';
 import LoadingSpinner from '../../UI/LoadingSpinner/LoadingSpinner';
 import Event from './Event/Event';
@@ -16,7 +17,12 @@ import { Link } from 'react-router-dom';
  */
 const Events = () => {
   const dispatch = useDispatch();
-  const { jwt } = useSelector(state => state.auth);
+  const {
+    auth: { jwt },
+    users: {
+      me: { _id },
+    },
+  } = useSelector(state => state);
   const { data, error, isPending } = useAsync({
     promiseFn: getEvents,
     token: jwt,
@@ -39,6 +45,7 @@ const Events = () => {
               title={event.title}
               description={event.description}
               datetime={event.beginning}
+              guest={isGuest(_id, event.guests)}
             />
           ))}
       </div>

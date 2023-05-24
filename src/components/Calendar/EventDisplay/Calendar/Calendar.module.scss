@@ -1,0 +1,15 @@
+@import '../../../../scss/abstracts/variables';
+
+.calendar {
+  background-color: $white;
+  margin-top: 2rem;
+  width: 100%;
+  table-layout: fixed;
+  &__top-corner {
+    height: 5.6rem;
+    width: 6.7rem;
+  }
+  &__table-content {
+    overflow: hidden;
+  }
+}

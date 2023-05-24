@@ -257,7 +257,7 @@ export const sendDemand = async (token, userId, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} id the id of the demand the connected used wants to accept
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the authorization status of retrieving the demands and the new created demand
+ * @returns {Promise<boolean[]>} an array containing the validity of accepting a demand, the authorization status of the acceptation attempt and the updated demand
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -267,7 +267,7 @@ export const acceptDemand = async (token, id, dispatch) => {
 
   if (valid) dispatch(teachingDemandsActions.setTeachingDemand(demand));
 
-  return [authorized, demand];
+  return [valid, authorized, demand];
 };
 
 /**
@@ -275,7 +275,7 @@ export const acceptDemand = async (token, id, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} id the id of the demand the connected used wants to cancel
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the authorization status of retrieving the demands and the new created demand
+ * @returns {Promise<boolean[]>} an array containing the validity of cancelling a demand, an array containing the authorization status of the cancellation attempt and the updated demand
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -285,7 +285,7 @@ export const cancelDemand = async (token, id, dispatch) => {
 
   if (valid) dispatch(teachingDemandsActions.setTeachingDemand(demand));
 
-  return [authorized, demand];
+  return [valid, authorized, demand];
 };
 
 /**

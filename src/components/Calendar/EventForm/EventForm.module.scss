@@ -1,0 +1,49 @@
+@import '../../../scss/abstracts/variables';
+@import '../../../scss/abstracts/mixins';
+
+.event-form {
+  padding-right: 2.4rem;
+  @include respondMax(69.7) {
+    padding-right: 0;
+  }
+  &__title {
+    font-size: 3.2rem;
+    font-weight: 400;
+    margin: 0;
+    @include respondMax(69.7) {
+      visibility: hidden;
+      position: absolute;
+    }
+  }
+  &__calendar-container {
+    margin-top: 3.2rem;
+    padding: 2.4rem;
+    background-color: $white;
+    border-top: 1px solid $grey-light-9;
+    height: calc(100% - 3.7rem);
+    @include respondMax(69.7) {
+      margin-top: 2.2rem;
+      margin-bottom: 2.2rem;
+      background-color: transparent;
+      border-top: none;
+      height: min-content;
+      padding: 0;
+    }
+  }
+  &__event-btn {
+    font-size: 1.6rem;
+    font-weight: 500;
+    width: 100%;
+    padding: 1.6rem;
+    padding-left: 0;
+    padding-right: 0;
+    @include respondMax(69.7) {
+      max-width: 30rem;
+    }
+    @include respond(tab-portrait) {
+      max-width: 100%;
+      height: 6.3rem;
+      padding: 0;
+    }
+  }
+}

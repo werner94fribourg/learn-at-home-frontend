@@ -1,0 +1,39 @@
+@import '../../../../scss/abstracts/variables';
+
+.header {
+  &__infos {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: $primary-dark-2;
+  }
+  &__day {
+    font-weight: 400;
+    font-size: 1.4rem;
+  }
+  &__weekday {
+    font-weight: 600;
+    font-size: 1.6rem;
+  }
+}
+
+.active {
+  color: $white;
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  &::after {
+    content: '';
+    position: absolute;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: $primary-dark-2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+}

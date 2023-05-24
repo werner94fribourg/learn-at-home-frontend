@@ -1,0 +1,34 @@
+@import '../../../../scss/abstracts/variables';
+
+.timerow {
+  position: relative;
+  &:first-child {
+    .timerow__cell {
+      border-top: 1px solid $grey-light-9;
+    }
+  }
+  &__cell {
+    border-left: 1px solid $grey-light-9;
+    position: relative;
+    &:last-of-type {
+      border-right: 1px solid $grey-light-9;
+    }
+  }
+  &__hour {
+    color: #939094;
+    font-size: 1.2rem;
+    height: 15rem;
+    border-bottom: 1px solid $grey-light-9;
+    position: relative;
+  }
+  &__hour-content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.active {
+  background-color: $primary-light-8;
+}

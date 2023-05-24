@@ -6,7 +6,6 @@
   grid-template-columns: 24rem 1fr;
   grid-template-rows: 1fr;
   min-height: calc(100vh - 8rem);
-  background-color: $primary-light-5;
   @include respondMax(75) {
     grid-template-columns: 1fr;
   }

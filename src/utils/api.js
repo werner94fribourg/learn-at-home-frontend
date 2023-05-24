@@ -2,7 +2,17 @@
  * Store of all global api functions used in the application
  * @module api
  */
-import { SEND_TEACHING_DEMAND_URL, SUPERVISED_STATUS_URL } from './globals';
+import {
+  ACCEPT_EVENT_URL,
+  DECLINE_EVENT_URL,
+  MONTHLY_EVENTS_URL,
+  SEND_TEACHING_DEMAND_URL,
+  SINGLE_EVENT_URL,
+  SUPERVISED_STATUS_URL,
+  WEEKLY_EVENTS_URL,
+  YEARLY_EVENTS_URL,
+} from './globals';
+import { USERS_URL } from './globals';
 import {
   ACCEPT_DEMAND_URL,
   AVAILABLE_TEACHERS_URL,
@@ -571,6 +581,42 @@ export const getAllMembers = (token, page, limit = 12) => {
 };
 
 /**
+ * The params of the getExistingMembers function
+ * @typedef ExistingMembersParams
+ * @property {string} token the jwt token of the logged user
+ */
+
+/**
+ * Function used to get all existing users in the application
+ * @param {Object<ExistingMembersParams>} existingMembersParams the parameter object of the function
+ * @returns {Promise<Object>} a promise containing all existing members
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getExistingMembers = ({ token }) => {
+  return makeApiCall(
+    USERS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { users },
+      } = data;
+
+      return { valid: true, authorized: true, users };
+    }
+  );
+};
+
+/**
  * Function used to retrieve a single user from the backend
  * @param {string} id the id of the user we want to retrieve
  * @returns {Promise<Object>} a promise containing the user
@@ -951,6 +997,248 @@ export const getSupervisedStatus = token => {
       const { supervised } = data;
 
       return { valid: true, authorized: true, supervised };
+    }
+  );
+};
+
+/**
+ * Function used to get all the events of an user happening in the same period as a given date
+ * @param {string} token the jwt token of the logged user
+ * @param {string} date the date for which we want to get all the events
+ * @param {string} period the type of period from which we want to get the events
+ * @returns {Promise<Object>} a promise containing all the events happening at the same period as the given date
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getPeriodEvents = (token, date, period) => {
+  let url;
+  switch (period) {
+    case 'month':
+      url = MONTHLY_EVENTS_URL;
+      break;
+    case 'year':
+      url = YEARLY_EVENTS_URL;
+      break;
+    default:
+      url = WEEKLY_EVENTS_URL;
+      break;
+  }
+
+  return makeApiCall(
+    url.replace('{date}', date),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { events },
+      } = data;
+
+      return { valid: true, authorized: true, events };
+    }
+  );
+};
+
+/**
+ * Function used to create a new event for the connected user
+ * @param {string} token the jwt token of the logged user
+ * @param {Object} event the values of the fields of the event we want to create
+ * @returns {Promise<Object>} a promise containing the new event that was created
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const createNewEvent = (token, event) => {
+  return makeApiCall(
+    EVENTS_URL,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(event),
+    },
+    data => {
+      const {
+        data: { event },
+      } = data;
+
+      return { valid: true, authorized: true, event };
+    },
+    201
+  );
+};
+
+/**
+ * Function used to get a single event from the backend
+ * @param {string} token the jwt token of the logged user
+ * @param {string} eventId the id of the event we want to get the data
+ * @returns {Promise<Object>} a promise containing the requested event
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getSingleEvent = (token, eventId) => {
+  return makeApiCall(
+    SINGLE_EVENT_URL.replace('{id}', eventId),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { event },
+      } = data;
+
+      return { valid: true, authorized: true, event };
+    }
+  );
+};
+
+/**
+ * Function used to modify an existing event
+ * @param {string} token the jwt token of the logged user
+ * @param {Object} event the event we want to modify
+ * @returns {Promise<Object>} a promise containing the updated event sent back by the backend
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const modifyExistingEvent = (token, event) => {
+  const modificationEvent = { ...event };
+  delete modificationEvent._id;
+  delete modificationEvent.participants;
+  delete modificationEvent.organizer;
+
+  return makeApiCall(
+    SINGLE_EVENT_URL.replace('{id}', event._id),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(modificationEvent),
+    },
+    data => {
+      const {
+        data: { event },
+      } = data;
+
+      return { valid: true, authorized: true, event };
+    }
+  );
+};
+
+/**
+ * Function used to delete an existing event
+ * @param {string} token the jwt token of the logged user
+ * @param {string} eventId the id of the event we want to delete
+ * @returns {Promise<Object>} a promise containing the status of the deletion operation
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const deleteSingleEvent = (token, eventId) => {
+  return makeApiCall(
+    SINGLE_EVENT_URL.replace('{id}', eventId),
+    {
+      method: 'DELETE',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    () => {
+      return { valid: true, authorized: true };
+    },
+    204
+  );
+};
+
+/**
+ * Function used to accept an event invitation and to participate in it
+ * @param {string} token the jwt token of the logged user
+ * @param {string} eventId the id of the event we want to accept the invitation
+ * @returns {Promise<Object>} a promise containing the update event after we accepted the invitation
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const acceptEventInvitation = (token, eventId) => {
+  return makeApiCall(
+    ACCEPT_EVENT_URL.replace('{id}', eventId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { event },
+      } = data;
+
+      return { valid: true, authorized: true, event };
+    }
+  );
+};
+
+/**
+ * Function used to decline an event invitation and to participate in it
+ * @param {string} token the jwt token of the logged user
+ * @param {string} eventId the id of the event we want to decline the invitation
+ * @returns {Promise<Object>} a promise containing the update event after we accepted the invitation
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const declineEventInvitation = (token, eventId) => {
+  return makeApiCall(
+    DECLINE_EVENT_URL.replace('{id}', eventId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { event },
+      } = data;
+
+      return { valid: true, authorized: true, event };
     }
   );
 };
