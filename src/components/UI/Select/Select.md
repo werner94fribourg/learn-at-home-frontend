@@ -2,7 +2,8 @@
 <Select
   className={selectStyles['form__select']}
   selectTitle="Teacher"
+  optionTitle="Please choose a teacher"
   name="teacher"
-  teachers={teachers}
+  users={teachers}
 />
 ```

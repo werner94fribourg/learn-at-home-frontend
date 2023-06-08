@@ -2,6 +2,7 @@
  * Tasks slice of the redux store
  * @module store
  */
+import { getSupervisedStudents } from '../../utils/api';
 import {
   addContact,
   declineInvitation,
@@ -27,6 +28,7 @@ import { createSlice } from '@reduxjs/toolkit';
  * @property {string} lastname - the lastname of the user
  * @property {string} photo - the photo of the user
  * @property {string} role - the role of the user
+ * @property {User} supervisor - the supervisor of the student
  */
 
 /**
@@ -79,6 +81,7 @@ const initialState = {
     lastname: '',
     photo: '',
     role: '',
+    supervisor: undefined,
   },
   loading: true,
   activeUser: { id: '', username: '' },
@@ -93,6 +96,7 @@ const initialState = {
   loadPage: false,
   notificationData: undefined,
   supervised: true,
+  students: [],
 };
 
 /**
@@ -108,9 +112,27 @@ const usersSlice = createSlice({
   reducers: {
     setMe(state, action) {
       const {
-        payload: { _id, email, username, firstname, lastname, photo, role },
+        payload: {
+          _id,
+          email,
+          username,
+          firstname,
+          lastname,
+          photo,
+          role,
+          supervisor,
+        },
       } = action;
-      state.me = { _id, email, username, firstname, lastname, photo, role };
+      state.me = {
+        _id,
+        email,
+        username,
+        firstname,
+        lastname,
+        photo,
+        role,
+        supervisor,
+      };
       state.loading = false;
     },
     setLoading(state) {
@@ -191,6 +213,10 @@ const usersSlice = createSlice({
     setSupervised(state, action) {
       const { payload: status } = action;
       state.supervised = status;
+    },
+    setSupervisedStudents(state, action) {
+      const { payload: students } = action;
+      state.students = students;
     },
   },
 });
@@ -565,4 +591,16 @@ export const getSupervision = async (token, dispatch) => {
  */
 export const setSupervisionStatus = (status, dispatch) => {
   dispatch(usersActions.setSupervised(status));
+};
+
+export const getStudents = async (token, dispatch) => {
+  const {
+    valid,
+    authorized,
+    users: students,
+  } = await getSupervisedStudents({ token });
+
+  if (valid) dispatch(usersActions.setSupervisedStudents(students));
+
+  return authorized;
 };

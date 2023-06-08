@@ -12,7 +12,7 @@ import { CSSTransition } from 'react-transition-group';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const Select = props => {
-  const { className, selectTitle, name, teachers } = props;
+  const { className, selectTitle, name, users, optionTitle } = props;
   const [clicked, setClicked] = useState(false);
   const [selected, setSelected] = useState({ id: '', name: selectTitle });
   const optionsRef = useRef(null);
@@ -69,16 +69,16 @@ const Select = props => {
         unmountOnExit
       >
         <div className={styles['select__options']} ref={optionsRef}>
-          {teachers.map(teacher => (
+          {users.map(user => (
             <div
-              key={`div__${teacher._id}`}
+              key={`div__${user._id}`}
               className={styles['select__option']}
               onClick={selectHandler.bind(null, {
-                id: teacher._id,
-                name: teacher.username,
+                id: user._id,
+                name: user.username,
               })}
             >
-              {teacher.username} ({teacher.firstname} {teacher.lastname})
+              {user.username} ({user.firstname} {user.lastname})
             </div>
           ))}
         </div>
@@ -91,10 +91,10 @@ const Select = props => {
         ref={selectRef}
         defaultValue={''}
       >
-        <option value="">Please choose a teacher</option>
-        {teachers.map(teacher => (
-          <option key={`option__${teacher._id}`} value={teacher._id}>
-            {teacher.username}
+        <option value="">{optionTitle}</option>
+        {users.map(user => (
+          <option key={`option__${user._id}`} value={user._id}>
+            {user.username}
           </option>
         ))}
       </select>
@@ -106,12 +106,14 @@ const Select = props => {
 Select.propTypes = {
   /** The class(es) we want to associate with the Select component */
   className: PropTypes.string,
-  /** The title of the selection input when no item was choosen */
+  /** The title of the selection input (displayed) when no item was choosen */
   selectTitle: PropTypes.string,
   /** the name of the select input field */
   name: PropTypes.string,
-  /** the handler function that will be called when the user clicks on the select input */
-  onClick: PropTypes.func,
+  /** the users we want to choose from the select input field */
+  users: PropTypes.arrayOf(PropTypes.object),
+  /** the title displayed in the select (not displayed) if no value was choosen */
+  optionTitle: PropTypes.string,
 };
 
 export default Select;
