@@ -222,6 +222,60 @@ export const READ_URL = MESSAGES_URL + '/{id}/read';
 export const EVENTS_URL = API_URL + '/events';
 
 /**
+ * URL of the events/{id} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SINGLE_EVENT_URL = EVENTS_URL + '/{id}';
+
+/**
+ * URL of the events/{id}/accept endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const ACCEPT_EVENT_URL = SINGLE_EVENT_URL + '/accept';
+
+/**
+ * URL of the events/{id}/decline endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const DECLINE_EVENT_URL = SINGLE_EVENT_URL + '/refuse';
+
+/**
+ * URL of the events/week/{date} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const WEEKLY_EVENTS_URL = EVENTS_URL + '/week/{date}';
+
+/**
+ * URL of the events/month/{date} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const MONTHLY_EVENTS_URL = EVENTS_URL + '/month/{date}';
+
+/**
+ * URL of the events/year/{date} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const YEARLY_EVENTS_URL = EVENTS_URL + '/year/{date}';
+
+/**
  * URL of the task ressource in the backend
  * @type {string}
  *
@@ -329,3 +383,12 @@ export const SEND_TEACHING_DEMAND_URL = TEACHING_DEMANDS_URL + '/user/{userId}';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const SUPERVISED_STATUS_URL = TEACHING_DEMANDS_URL + '/is-supervised';
+
+/**
+ * Array containing two-letters abbreviations for each day of the week
+ * @type {string[]}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const WEEK_DAYS = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];

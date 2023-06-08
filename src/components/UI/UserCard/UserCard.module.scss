@@ -33,6 +33,7 @@
     border-radius: 0.4rem;
     height: 2.5rem;
     border: 1px solid $primary;
+    cursor: pointer;
     @include respond(tab-land) {
       height: 1.5rem;
       border: none;

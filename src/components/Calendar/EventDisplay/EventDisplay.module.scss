@@ -1,0 +1,66 @@
+@import '../../../scss/abstracts/variables';
+@import '../../../scss/abstracts/mixins';
+
+.event-display {
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 1rem;
+  }
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px $grey-light-3;
+    border-radius: 1rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $primary;
+    border-radius: 1rem;
+    &:hover {
+      background-color: darken($primary, 10%);
+    }
+  }
+  &__header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 1.6rem;
+  }
+  &__navigations {
+    color: $primary;
+    display: flex;
+    align-items: center;
+    flex-flow: row nowrap;
+    gap: 1rem;
+  }
+  &__navigation {
+    height: 1rem;
+    cursor: pointer;
+  }
+  &__value {
+    display: inline-block;
+    padding: 0.6rem 1.6rem;
+    border-radius: 0.4rem;
+    background-color: #eac6ca;
+    min-width: 12rem;
+    text-align: center;
+  }
+  &__period-selector {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    gap: 2.8rem;
+    margin-right: 4rem;
+    @include respond(tab-portrait) {
+      margin-right: 3rem;
+    }
+  }
+  &__period {
+    display: inline-block;
+    height: 3rem;
+    color: $grey-light-5;
+    cursor: pointer;
+    &--active {
+      color: $black-3;
+      border-bottom: 1px solid $primary;
+    }
+  }
+}

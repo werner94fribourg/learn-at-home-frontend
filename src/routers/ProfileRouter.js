@@ -1,8 +1,17 @@
 import Layout from '../components/Layout/Layout';
 import MessageNotification from '../components/UI/MessageNotification/MessageNotification';
 import Notification from '../components/UI/Notification/Notification';
+import Calendar from '../pages/Calendar';
 import TeachingDemands from '../pages/TeachingDemands';
 import { logout } from '../store/slice/auth';
+import {
+  eventDeleted,
+  eventModified,
+  participationAccepted,
+  participationDeclined,
+  receiveEvent,
+  receiveModifiedEvent,
+} from '../store/slice/calendar';
 import {
   getLastConversation,
   getTotalUnread,
@@ -27,6 +36,7 @@ import {
 } from '../store/slice/users';
 import { getSocket, setSocket } from '../utils/utils';
 import loadable from '@loadable/component';
+import moment from 'moment-timezone';
 import { Fragment, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -53,6 +63,7 @@ const ProfileRouter = () => {
     },
     messages: { notification },
     demands: { notificationData: demandsNotificationData },
+    calendar: { notificationData: eventsNotificationData },
   } = useSelector(state => state);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -144,6 +155,83 @@ const ProfileRouter = () => {
 
         demandCancelled(demand, dispatch);
       });
+      socket.on('receive_event', event => {
+        const { guests } = event;
+
+        if (!guests.includes(userId)) return;
+
+        receiveEvent(event, dispatch);
+      });
+      socket.on('event_accepted', data => {
+        const {
+          event,
+          event: { organizer: organizerId },
+          sender,
+        } = data;
+
+        if (organizerId !== userId) return;
+
+        participationAccepted(event, sender, dispatch);
+      });
+      socket.on('event_declined', data => {
+        const {
+          event,
+          event: { organizer: organizerId },
+          sender,
+        } = data;
+
+        if (organizerId !== userId) return;
+
+        participationDeclined(event, sender, dispatch);
+      });
+
+      socket.on('event_modified', data => {
+        const {
+          initialBeginning,
+          initialEnd,
+          username,
+          event,
+          event: { guests, attendees },
+        } = data;
+
+        if (guests.includes(userId)) {
+          receiveEvent(event, dispatch);
+          return;
+        }
+
+        if (!attendees.includes(userId)) return;
+
+        receiveModifiedEvent(event, dispatch);
+
+        const newBeginning = moment(event.beginning).tz('Europe/Zurich');
+        const newEnd = moment(event.end).tz('Europe/Zurich');
+        if (
+          initialBeginning !== newBeginning.valueOf() ||
+          initialEnd !== newEnd.valueOf()
+        )
+          eventModified(event, username, dispatch);
+      });
+      socket.on('event_deleted', data => {
+        const {
+          username,
+          event,
+          event: { guests: guestArray, attendees: attendeesArray },
+        } = data;
+
+        const guests = guestArray.map(guest => {
+          if (typeof guest === 'object') return guest._id;
+
+          return guest;
+        });
+        const attendees = attendeesArray.map(attendee => {
+          if (typeof attendee === 'object') return attendee._id;
+
+          return attendee;
+        });
+        if (!guests.includes(userId) && !attendees.includes(userId)) return;
+
+        eventDeleted(event, username, dispatch);
+      });
     }
     return () => {
       socket?.off('receive_message');
@@ -154,6 +242,11 @@ const ProfileRouter = () => {
       socket?.off('receive_teaching_demand');
       socket?.off('teaching_demand_accepted');
       socket?.off('teaching_demand_cancelled');
+      socket?.off('receive_event');
+      socket?.off('event_accepted');
+      socket?.off('event_declined');
+      socket?.off('event_modified');
+      socket?.off('event_deleted');
     };
   }, [jwt, userId, role, activeUser, dispatch, pathname]);
 
@@ -166,6 +259,7 @@ const ProfileRouter = () => {
           <Route path="/conversations" element={<Conversations />} />
           <Route path="/teaching" element={<TeachingDemands />} />
           <Route path="/members/*" element={<Members />} />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="*" element={<Navigate to="/" replace />} replace />
         </Routes>
       </Layout>
@@ -177,7 +271,8 @@ const ProfileRouter = () => {
       {usersNotificationData &&
         createPortal(
           <Notification
-            userId={usersNotificationData.id}
+            id={usersNotificationData.id}
+            title="Invitation"
             username={usersNotificationData.username}
             message={usersNotificationData.message}
             status={usersNotificationData.valid}
@@ -188,11 +283,27 @@ const ProfileRouter = () => {
       {demandsNotificationData &&
         createPortal(
           <Notification
-            userId={demandsNotificationData.id}
+            id={demandsNotificationData.id}
+            title="Teaching demand request"
             username={demandsNotificationData.username}
             message={demandsNotificationData.message}
             status={demandsNotificationData.valid}
             type={demandsNotificationData.type}
+          />,
+          document.querySelector('#root')
+        )}
+      {eventsNotificationData &&
+        createPortal(
+          <Notification
+            id={eventsNotificationData.id}
+            title={eventsNotificationData.title}
+            username={eventsNotificationData.username}
+            message={eventsNotificationData.message}
+            status={eventsNotificationData.valid}
+            type={eventsNotificationData.type}
+            beginning={eventsNotificationData.beginning}
+            end={eventsNotificationData.end}
+            accepted={eventsNotificationData.accepted}
           />,
           document.querySelector('#root')
         )}

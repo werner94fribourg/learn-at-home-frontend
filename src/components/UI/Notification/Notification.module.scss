@@ -157,4 +157,20 @@
       color: $white;
     }
   }
+  &__timing {
+    color: $black-1;
+    font-size: 1.4rem;
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0;
+  }
+  &__timing-modification {
+    display: flex;
+    flex-flow: column nowrap;
+    background-color: $yellow;
+    padding: 0.8rem 1.6rem;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: $grey-light-5;
+  }
 }

@@ -1,0 +1,30 @@
+@import '../../../../scss/abstracts/variables';
+@import '../../../../scss/abstracts/mixins';
+
+.datepicker {
+  padding: 2rem 0;
+  @include respondMax(69.7) {
+    visibility: hidden;
+    position: absolute;
+  }
+  &__header {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid $grey-light-10;
+  }
+  &__title {
+    font-size: 2rem;
+    font-weight: 600;
+  }
+  &__navigations {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 1rem;
+  }
+  &__navigation {
+    width: 10px;
+    cursor: pointer;
+  }
+}

@@ -9,6 +9,7 @@
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
   width: 100%;
+  background-color: $primary-light-5;
   @include respondMax(75) {
     &::after {
       content: '';

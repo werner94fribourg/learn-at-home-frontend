@@ -444,7 +444,7 @@ export const acceptInvitation = async (token, userId, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} userId the id of the user we want to decline the contact invitation
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean>} false if the request generated an authorization status code from the server, true otherwise
+ * @returns {Promise<boolean[]>}  an array containing the validity of the contact declination attempt and the authorization status
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -458,7 +458,7 @@ export const decline = async (token, userId, dispatch) => {
     dispatch(usersActions.setInvitationsLoading(false));
   }
 
-  return authorized;
+  return [valid, authorized];
 };
 
 /**

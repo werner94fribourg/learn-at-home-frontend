@@ -1,0 +1,32 @@
+@import '../../../../../scss/abstracts/variables';
+
+.dateitem {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: $black-4;
+  cursor: pointer;
+  &__other-month {
+    color: $grey-light-11;
+  }
+  &__now {
+    color: $red;
+  }
+  &__selected {
+    color: $white;
+    position: relative;
+    z-index: 1;
+    &::after {
+      content: '';
+      position: absolute;
+      height: 4rem;
+      width: 4rem;
+      border-radius: 10rem;
+      background-color: #bb4853;
+      z-index: -1;
+      top: 50%;
+      right: 50%;
+      transform: translate(50%, -50%);
+    }
+  }
+}

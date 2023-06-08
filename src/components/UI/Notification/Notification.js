@@ -1,5 +1,10 @@
 import { logout } from '../../../store/slice/auth';
 import {
+  closeNotification as closeEventNotification,
+  declineParticipation,
+  participateInEvent,
+} from '../../../store/slice/calendar';
+import {
   acceptDemand,
   cancelDemand,
   closeNotification as closeDemandNotification,
@@ -14,12 +19,15 @@ import { getSocket } from '../../../utils/utils';
 import Button from '../Button/Button';
 import styles from './Notification.module.scss';
 import {
+  faCalendar,
+  faPen,
   faPersonChalkboard,
   faUserMinus,
   faUserPlus,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import moment from 'moment-timezone';
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +47,17 @@ const Notification = props => {
     },
   } = useSelector(state => state);
   const dispatch = useDispatch();
-  const { userId, username, message, status, type } = props;
+  const {
+    id,
+    username,
+    message,
+    status,
+    type,
+    title,
+    beginning,
+    end,
+    accepted,
+  } = props;
   const notificationRef = useRef(null);
   const [visible, setVisible] = useState(false);
   const [displayed, setDisplayed] = useState(false);
@@ -47,13 +65,15 @@ const Notification = props => {
 
   let icon = faUserPlus;
   let sender = true;
-
+  let notificationTitle = 'Invitation';
+  let receiverTextIntroduction = `Sent ${sender ? 'to' : 'by'} `;
   switch (type) {
     case 'invite':
       icon = faUserPlus;
       break;
     case 'delete_contact':
       icon = faUserMinus;
+      notificationTitle = 'Contact removal';
       break;
     case 'receive_invitation':
       icon = faUserPlus;
@@ -61,11 +81,43 @@ const Notification = props => {
       break;
     case 'receive_teaching_demand':
       icon = faPersonChalkboard;
+      notificationTitle = 'Teaching demand';
       sender = false;
       break;
     case 'teaching_demand_accepted':
       icon = faPersonChalkboard;
+      notificationTitle = 'Teaching demand';
       sender = false;
+      break;
+    case 'event_created':
+      icon = faCalendar;
+      notificationTitle = 'Event';
+      receiverTextIntroduction = 'Organized by ';
+      break;
+    case 'receive_event':
+      icon = faCalendar;
+      notificationTitle = 'Event';
+      receiverTextIntroduction = 'Organized by ';
+      break;
+    case 'event_accepted':
+      icon = faCalendar;
+      notificationTitle = 'Invitation accepted';
+      receiverTextIntroduction = 'Accepted by ';
+      break;
+    case 'event_declined':
+      icon = faCalendar;
+      notificationTitle = 'Invitation declined';
+      receiverTextIntroduction = 'Declined by ';
+      break;
+    case 'event_modified':
+      icon = faPen;
+      notificationTitle = 'Modification';
+      receiverTextIntroduction = 'Type of change : ';
+      break;
+    case 'event_deleted':
+      icon = faPen;
+      notificationTitle = 'Cancellation';
+      receiverTextIntroduction = 'Type of change : ';
       break;
     default:
       break;
@@ -88,20 +140,21 @@ const Notification = props => {
     setTimeout(() => {
       closeUserNotification(dispatch);
       closeDemandNotification(dispatch);
+      closeEventNotification(dispatch);
     }, 500);
   };
 
   const acceptContactHandler = async () => {
-    const [valid, authorized] = await acceptInvitation(jwt, userId, dispatch);
+    const [valid, authorized] = await acceptInvitation(jwt, id, dispatch);
 
     if (!authorized) logout(dispatch);
 
     if (valid && socket) {
       socket.emit('accept_invitation', {
-        sender: { id: userId, username },
+        sender: { id: id, username },
         receiver: { id: connectedId, username: connectedUsername },
       });
-      await addUserToContactList(userId, dispatch);
+      await addUserToContactList(id, dispatch);
       setVisible(false);
       setTimeout(() => {
         closeUserNotification(dispatch);
@@ -109,51 +162,108 @@ const Notification = props => {
     }
   };
   const refuseContactHandler = async () => {
-    const authorized = await decline(jwt, userId, dispatch);
+    const [valid, authorized] = await decline(jwt, id, dispatch);
 
     if (!authorized) {
       logout(dispatch);
     }
-
-    setVisible(false);
-    setTimeout(() => {
-      closeUserNotification(dispatch);
-    }, 500);
+    if (valid) {
+      setVisible(false);
+      setTimeout(() => {
+        closeUserNotification(dispatch);
+      }, 500);
+    }
   };
 
   const acceptDemandHandler = async () => {
-    const [authorized, demand] = await acceptDemand(jwt, userId, dispatch);
+    const [valid, authorized, demand] = await acceptDemand(jwt, id, dispatch);
     if (!authorized) {
       logout(dispatch);
       return;
     }
-    socket.emit('accept_teaching_demand', demand);
-    setTimeout(() => {
-      closeDemandNotification(dispatch);
-    }, 500);
+    if (valid && socket) {
+      socket.emit('accept_teaching_demand', demand);
+      setVisible(false);
+      setTimeout(() => {
+        closeDemandNotification(dispatch);
+      }, 500);
+    }
   };
 
   const cancelDemandHandler = async () => {
-    const [authorized, demand] = await cancelDemand(jwt, userId, dispatch);
+    const [valid, authorized, demand] = await cancelDemand(jwt, id, dispatch);
     if (!authorized) {
       logout(dispatch);
       return;
     }
-    socket.emit('cancel_teaching_demand', demand);
-    setTimeout(() => {
-      closeDemandNotification(dispatch);
-    }, 500);
+    if (valid && socket) {
+      socket.emit('cancel_teaching_demand', demand);
+      setVisible(false);
+      setTimeout(() => {
+        closeDemandNotification(dispatch);
+      }, 500);
+    }
   };
 
   const notificationClickHandler = event => {
     event.stopPropagation();
   };
 
+  const acceptEventInvitation = async () => {
+    const [valid, authorized, event] = await participateInEvent(
+      jwt,
+      id,
+      dispatch
+    );
+
+    if (!authorized) {
+      logout(dispatch);
+      return;
+    }
+
+    if (valid && socket) {
+      socket.emit('accept_event', { sender: connectedUsername, event });
+      setVisible(false);
+      setTimeout(() => {
+        closeEventNotification(dispatch);
+      }, 500);
+    }
+  };
+
+  const declineEventInvitation = async () => {
+    const [valid, authorized, event] = await declineParticipation(
+      jwt,
+      id,
+      dispatch
+    );
+
+    if (!authorized) {
+      logout(dispatch);
+      return;
+    }
+
+    if (valid && socket) {
+      socket.emit('decline_event', { sender: connectedUsername, event });
+      setVisible(false);
+      setTimeout(() => {
+        closeEventNotification(dispatch);
+      }, 500);
+    }
+  };
+
   const acceptHandler =
-    type === 'receive_invitation' ? acceptContactHandler : acceptDemandHandler;
+    type === 'receive_invitation'
+      ? acceptContactHandler
+      : type === 'receive_event'
+      ? acceptEventInvitation
+      : acceptDemandHandler;
 
   const refuseHandler =
-    type === 'receive_invitation' ? refuseContactHandler : cancelDemandHandler;
+    type === 'receive_invitation'
+      ? refuseContactHandler
+      : type === 'receive_event'
+      ? declineEventInvitation
+      : cancelDemandHandler;
 
   return (
     <CSSTransition
@@ -184,28 +294,82 @@ const Notification = props => {
                 icon={icon}
               />
             </div>
-            <h2 className={styles['notification__title']}>Invitation</h2>
+            <h2 className={styles['notification__title']}>
+              {notificationTitle}
+            </h2>
             <span className={styles['notification__receiver-text']}>
-              Sent {sender ? 'to' : 'by'}{' '}
+              {receiverTextIntroduction}
               <span className={styles['notification__receiver']}>
                 {username}
               </span>
             </span>
           </div>
-          {type !== 'receive_invitation' && (
-            <h3 className={statusClassNames}>{status ? 'Success' : 'Fail'}</h3>
-          )}
-          {type === 'receive_invitation' && (
-            <h3 className={styles['notification__status']}>Invitation</h3>
+          {type !== 'receive_invitation' &&
+            type !== 'receive_teaching_demand' &&
+            type !== 'receive_event' &&
+            type !== 'event_accepted' &&
+            type !== 'event_declined' &&
+            type !== 'event_modified' &&
+            type === 'event_deleted' && (
+              <h3 className={statusClassNames}>
+                {status ? 'Success' : 'Fail'}
+              </h3>
+            )}
+          {(type === 'receive_invitation' ||
+            type === 'receive_teaching_demand' ||
+            type === 'event_created' ||
+            type === 'receive_event' ||
+            type === 'event_accepted' ||
+            type === 'event_declined' ||
+            type === 'event_modified' ||
+            type === 'event_deleted') && (
+            <h3 className={styles['notification__status']}>{title}</h3>
           )}
           <p className={styles['notification__message']}>{message}</p>
+          {type.includes('event') &&
+            type !== 'event_modified' &&
+            type !== 'event_deleted' && (
+              <p className={styles['notification__timing']}>
+                {moment(beginning)
+                  .tz('Europe/Zurich')
+                  .format('DD.MM.YYYY HH:mm')}
+                &nbsp;-&nbsp;
+                {moment(end).tz('Europe/Zurich').format('DD.MM.YYYY HH:mm')}
+              </p>
+            )}
+          {type === 'event_modified' && (
+            <p className={styles['notification__timing-modification']}>
+              <span>The event was displaced by the organizer.</span>
+              <span>
+                New date :{' '}
+                {moment(beginning)
+                  .tz('Europe/Zurich')
+                  .format('DD.MM.YYYY HH:mm')}
+                &nbsp;-&nbsp;
+                {moment(end).tz('Europe/Zurich').format('DD.MM.YYYY HH:mm')}
+              </span>
+            </p>
+          )}
+          {type === 'event_deleted' && (
+            <p className={styles['notification__timing-modification']}>
+              <span>The event was cancelled by the organizer.</span>
+              <span>
+                {moment(beginning)
+                  .tz('Europe/Zurich')
+                  .format('DD.MM.YYYY HH:mm')}
+                &nbsp;-&nbsp;
+                {moment(end).tz('Europe/Zurich').format('DD.MM.YYYY HH:mm')}
+              </span>
+            </p>
+          )}
           <FontAwesomeIcon
             className={styles['notification__close-btn']}
             icon={faXmark}
             onClick={closeHandler}
           />
           {(type === 'receive_invitation' ||
-            type === 'receive_teaching_demand') && (
+            type === 'receive_teaching_demand' ||
+            type === 'receive_event') && (
             <div className={styles['notification__actions']}>
               <Button
                 className={`${styles['notification__action']} ${styles['notification__action--left']}`}
@@ -213,12 +377,14 @@ const Notification = props => {
                 type="button"
                 onClick={refuseHandler}
               />
-              <Button
-                className={`${styles['notification__action']} ${styles['notification__action--right']}`}
-                text="Accept"
-                type="button"
-                onClick={acceptHandler}
-              />
+              {!accepted && (
+                <Button
+                  className={`${styles['notification__action']} ${styles['notification__action--right']}`}
+                  text="Accept"
+                  type="button"
+                  onClick={acceptHandler}
+                />
+              )}
             </div>
           )}
         </div>
@@ -229,7 +395,7 @@ const Notification = props => {
 
 Notification.propTypes = {
   /** the id of the user that sent (or to whom we sent) the notification */
-  userId: PropTypes.string,
+  id: PropTypes.string,
   /** the username of the user that sent (or to whom we sent) the notification */
   username: PropTypes.string,
   /** the message displayed inside the notification */
@@ -238,6 +404,14 @@ Notification.propTypes = {
   status: PropTypes.bool,
   /** the type of the notification (invite, delete_contact, ...) */
   type: PropTypes.string,
+  /** in the case of an event notification, the title of the event */
+  title: PropTypes.string,
+  /** in the case of an event notification, its beginning */
+  beginning: PropTypes.string,
+  /** in the case of an event notification, its end */
+  end: PropTypes.string,
+  /** in the case of an event notification, the acceptation status of the event */
+  accepted: PropTypes.bool,
 };
 
 export default Notification;
