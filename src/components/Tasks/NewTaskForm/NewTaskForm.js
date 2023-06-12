@@ -9,7 +9,7 @@ import { getSocket } from '../../../utils/utils';
 import Button from '../../UI/Button/Button';
 import Select from '../../UI/Select/Select';
 import styles from './NewTaskForm.module.scss';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 /**
@@ -29,7 +29,8 @@ const NewTaskForm = () => {
   } = useSelector(state => state);
   const dispatch = useDispatch();
   const socket = getSocket();
-
+  const [titleErrMess, setTitleErrMess] = useState(undefined);
+  const [performerErrMess, setPerformerErrMess] = useState(undefined);
   useEffect(() => {
     if (role === 'teacher') getStudents(jwt, dispatch);
   }, [jwt, dispatch, role]);
@@ -41,11 +42,9 @@ const NewTaskForm = () => {
     const {
       target: { elements },
     } = event;
-    Array.from(document.querySelectorAll(`.${styles['err-message']}`)).forEach(
-      input => {
-        input.remove();
-      }
-    );
+    setTitleErrMess(undefined);
+    setPerformerErrMess(undefined);
+
     const inputs = Array.from(elements).filter(
       input => input.type !== 'submit'
     );
@@ -58,31 +57,10 @@ const NewTaskForm = () => {
 
     const titleInvalid = title === '';
     const perfomerInvalid = performer === '';
-
-    titleInput.classList[titleInvalid ? 'add' : 'remove'](
-      styles['form__input--invalid']
-    );
-    performerInput
-      .closest(`.${styles['form__input']}`)
-      .classList[perfomerInvalid ? 'add' : 'remove'](
-        styles['form__input--invalid']
-      );
-
-    if (titleInvalid || perfomerInvalid) {
-      if (titleInvalid)
-        titleInput.insertAdjacentHTML(
-          'afterend',
-          `<p class=${styles['err-message']}>Please provide a valid name</p>`
-        );
-      if (perfomerInvalid)
-        performerInput
-          .closest(`.${styles['form__input']}`)
-          .insertAdjacentHTML(
-            'afterend',
-            `<p class=${styles['err-message']}>Please choose an executor of the task</p>`
-          );
-      return;
-    }
+    if (titleInvalid) setTitleErrMess('Please provide a valid name');
+    if (perfomerInvalid)
+      setPerformerErrMess('Please choose an executor of the task');
+    if (titleInvalid || perfomerInvalid) return;
 
     titleInput.value = '';
 
@@ -112,21 +90,31 @@ const NewTaskForm = () => {
       {' '}
       <div className={styles['form__input-container']}>
         <input
-          className={styles['form__input']}
+          className={`${styles['form__input']}${
+            titleErrMess ? ' ' + styles['form__input--invalid'] : ''
+          }`}
           type="text"
           id="title"
           name="title"
           placeholder="Task name"
         />
+        {titleErrMess && (
+          <p className={styles['err-message']}>{titleErrMess}</p>
+        )}
       </div>
       <div className={styles['form__input-container']}>
         <Select
-          className={styles['form__input']}
+          className={`${styles['form__input']}${
+            performerErrMess ? ' ' + styles['form__input--invalid'] : ''
+          }`}
           selectTitle="Performer"
           optionTitle="Please choose a performer"
           name="performer"
           users={users}
         />
+        {performerErrMess && (
+          <p className={styles['err-message']}>{performerErrMess}</p>
+        )}
       </div>
       <Button className={styles['form__submit-btn']} text="Add" type="submit" />
     </form>

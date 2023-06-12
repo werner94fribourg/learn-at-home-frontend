@@ -1,0 +1,46 @@
+@import '../../../scss/abstracts/variables';
+
+.form {
+  font-size: 1.4rem;
+  &__input-container {
+    position: relative;
+    width: 100%;
+  }
+  &__input {
+    padding: 1.2rem 0;
+    &--invalid {
+      input {
+        border: 1px solid $red;
+        color: $red;
+        &::placeholder {
+          color: $red;
+        }
+      }
+    }
+    ~ .err-message {
+      color: $red;
+      font-size: 1.1rem;
+      position: absolute;
+      bottom: -1.3rem;
+    }
+  }
+  &__navigations {
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+  &__btn {
+    font-size: 1.4rem;
+    padding: 2.2rem 0;
+    width: 100%;
+    border: 1px solid $primary;
+    &--previous {
+      background-color: $white;
+      color: $primary;
+    }
+    &[disabled] {
+      opacity: 0.5;
+    }
+  }
+}

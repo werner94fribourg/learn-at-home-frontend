@@ -1,0 +1,23 @@
+@import '../scss/abstracts/variables';
+
+.signup {
+  background-color: $primary;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  &__content {
+    background-color: $white;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    max-width: 60rem;
+    padding: 5rem 2.5rem;
+    border-radius: 2rem;
+  }
+  &__title {
+    font-size: 2.4rem;
+  }
+}
