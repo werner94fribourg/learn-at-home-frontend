@@ -11,6 +11,7 @@ import {
   SINGLE_EVENT_URL,
   SINGLE_STUDENT_TASKS_URL,
   SUPERVISED_STATUS_URL,
+  TODAY_EVENTS_URL,
   VALIDATE_TASK_URL,
   WEEKLY_EVENTS_URL,
   YEARLY_EVENTS_URL,
@@ -1133,6 +1134,36 @@ export const getSupervisedStatus = token => {
       const { supervised } = data;
 
       return { valid: true, authorized: true, supervised };
+    }
+  );
+};
+
+/**
+ * Function used to get all the events of the user happenning the day he is logged in
+ * @param {string} token the jwt token of the logged user
+ * @returns {Promise<Object>} a promise containing the events of the user happening today
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getTodayEvents = token => {
+  return makeApiCall(
+    TODAY_EVENTS_URL,
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { events },
+      } = data;
+
+      return { valid: true, authorized: true, events };
     }
   );
 };

@@ -11,6 +11,7 @@ import {
   participationDeclined,
   receiveEvent,
   receiveModifiedEvent,
+  getUserTodayEvents,
 } from '../store/slice/calendar';
 import {
   getLastConversation,
@@ -80,6 +81,12 @@ const ProfileRouter = () => {
     if (role === 'student') {
       getSupervision(jwt, dispatch);
     }
+
+    const getTodayEvents = async () => {
+      const authorized = await getUserTodayEvents(jwt, dispatch);
+      if (!authorized) logout(dispatch);
+    };
+    getTodayEvents();
   }, [jwt, role, dispatch]);
 
   useEffect(() => {

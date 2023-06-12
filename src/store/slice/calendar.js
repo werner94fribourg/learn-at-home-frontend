@@ -8,6 +8,7 @@ import {
   declineEventInvitation,
   deleteSingleEvent,
   getPeriodEvents,
+  getTodayEvents,
   modifyExistingEvent,
 } from '../../utils/api';
 import { createSlice } from '@reduxjs/toolkit';
@@ -31,6 +32,7 @@ import moment from 'moment-timezone';
  * @typedef CalendarInitialState
  * @property {number} selectedDate - the actual selected date by the user
  * @property {Object[]} events - the array of the displayed events in the calendar
+ * @property {Object[]} todayEvents - the array of the events happening the day the user is connected
  * @property {string} period - the actual selected period used to get the displayed events
  * @property {boolean} loading - the loading state of the application when retrieving the events we want to display in the calendar
  * @property {NotificationData} notificationData - the data we want to display in the notification
@@ -44,6 +46,7 @@ import moment from 'moment-timezone';
 const initialState = {
   selectedDate: Date.now(),
   events: [],
+  todayEvents: [],
   period: 'week',
   loading: false,
   notificationData: undefined,
@@ -77,6 +80,10 @@ const calendarSlice = createSlice({
 
         return 0;
       });
+    },
+    setTodayEvents(state, action) {
+      const { payload: events } = action;
+      state.todayEvents = events;
     },
     setPeriod(state, action) {
       const { payload: period } = action;
@@ -174,6 +181,60 @@ export const setSelectedDate = async (token, date, period, dispatch) => {
 
   dispatch(calendarActions.setSelectedDate(date));
   dispatch(calendarActions.setLoading(false));
+
+  return authorized;
+};
+
+/**
+ * Async Function used to get today's events of the logged user, store it in the store and create a notification for each event that will be displayed 15 min before it starts
+ * @param {string} token the jwt token of the connected user
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<boolean>} false if the request generated an authorization status code from the server, true otherwise
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getUserTodayEvents = async (token, dispatch) => {
+  const { valid, authorized, events } = await getTodayEvents(token);
+
+  if (valid) dispatch(calendarActions.setTodayEvents(events));
+
+  events.forEach(event => {
+    const beginningNot = moment(event.beginning)
+      .tz('Europe/Zurich')
+      .subtract(15, 'minutes');
+    const now = moment(Date.now()).tz('Europe/Zurich');
+    const difference = beginningNot.valueOf() - now.valueOf();
+    if (difference >= 0)
+      setTimeout(() => {
+        dispatch(
+          calendarActions.setNotification({
+            username: event.organizer.username,
+            id: event._id,
+            valid: true,
+            title: event.title,
+            message: event.description,
+            type: 'event_notified',
+            beginning: event.beginning,
+            end: event.end,
+          })
+        );
+      }, difference);
+    else if (Math.abs(difference) <= 15 * 60 * 1000) {
+      dispatch(
+        calendarActions.setNotification({
+          username: event.organizer.username,
+          id: event._id,
+          valid: true,
+          title: event.title,
+          message: event.description,
+          type: 'event_notified',
+          beginning: event.beginning,
+          end: event.end,
+        })
+      );
+    }
+  });
 
   return authorized;
 };

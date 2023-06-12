@@ -222,6 +222,14 @@ export const READ_URL = MESSAGES_URL + '/{id}/read';
 export const EVENTS_URL = API_URL + '/events';
 
 /**
+ * URL of the events/today endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const TODAY_EVENTS_URL = EVENTS_URL + '/today';
+/**
  * URL of the events/{id} endpoint
  * @type {string}
  *
