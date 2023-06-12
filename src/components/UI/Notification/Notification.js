@@ -97,6 +97,11 @@ const Notification = props => {
       notificationTitle = 'Event';
       receiverTextIntroduction = 'Organized by ';
       break;
+    case 'event_notified':
+      icon = faCalendar;
+      notificationTitle = 'Event';
+      receiverTextIntroduction = 'Organized by ';
+      break;
     case 'receive_event':
       icon = faCalendar;
       notificationTitle = 'Event';
@@ -321,6 +326,7 @@ const Notification = props => {
           {type !== 'receive_invitation' &&
             type !== 'receive_teaching_demand' &&
             type !== 'receive_event' &&
+            type !== 'event_notified' &&
             type !== 'event_accepted' &&
             type !== 'event_declined' &&
             type !== 'event_modified' &&
@@ -333,6 +339,7 @@ const Notification = props => {
           {(type === 'receive_invitation' ||
             type === 'receive_teaching_demand' ||
             type === 'event_created' ||
+            type === 'event_notified' ||
             type === 'receive_event' ||
             type === 'event_accepted' ||
             type === 'event_declined' ||
