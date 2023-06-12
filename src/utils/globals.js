@@ -285,6 +285,33 @@ export const YEARLY_EVENTS_URL = EVENTS_URL + '/year/{date}';
 export const TASKS_URL = API_URL + '/tasks';
 
 /**
+ * URL of the tasks/{id} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SINGLE_TASK_URL = TASKS_URL + '/{id}';
+
+/**
+ * URL of the tasks/{id}/complete endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const COMPLETE_TASK_URL = SINGLE_TASK_URL + '/complete';
+
+/**
+ * URL of the tasks/{id}/validate endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const VALIDATE_TASK_URL = SINGLE_TASK_URL + '/validate';
+
+/**
  * URL of the tasks/students endpoint
  * @type {string}
  *
@@ -292,6 +319,15 @@ export const TASKS_URL = API_URL + '/tasks';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const STUDENTS_TASKS_URL = TASKS_URL + '/students';
+
+/**
+ * URL of the tasks/students/{userId} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SINGLE_STUDENT_TASKS_URL = STUDENTS_TASKS_URL + '/{userId}';
 
 /**
  * URL of the tasks/students/validated endpoint

@@ -106,8 +106,9 @@ const SendTeachingDemandForm = () => {
           <Select
             className={styles['form__select']}
             selectTitle="Teacher"
+            optionTitle="Please choose a teacher"
             name="teacher"
-            teachers={teachers}
+            users={teachers}
           />
           <div className={styles['form__actions']}>
             <Button className={styles['form__btn']} text="Send" type="submit" />

@@ -20,6 +20,11 @@ import {
   incrementConversationUnread,
 } from '../store/slice/messages';
 import {
+  notifyTask,
+  receiveCreatedTask,
+  receiveTask,
+} from '../store/slice/tasks';
+import {
   cancelDemandInStore,
   demandAccepted,
   demandCancelled,
@@ -46,6 +51,7 @@ const Dashboard = loadable(() => import('../pages/Dashboard'));
 const Profile = loadable(() => import('../pages/Profile'));
 const Conversations = loadable(() => import('../pages/Conversations'));
 const Members = loadable(() => import('../pages/Members'));
+const Tasks = loadable(() => import('../pages/Tasks'));
 
 /**
  * Router of the application (user logged in)
@@ -57,13 +63,14 @@ const ProfileRouter = () => {
   const {
     auth: { jwt },
     users: {
-      me: { _id: userId, role },
+      me: { _id: userId, role, supervisor, username },
       activeUser: { id: activeUser },
       notificationData: usersNotificationData,
     },
     messages: { notification },
     demands: { notificationData: demandsNotificationData },
     calendar: { notificationData: eventsNotificationData },
+    tasks: { notificationData: tasksNotificationData },
   } = useSelector(state => state);
   const dispatch = useDispatch();
   const { pathname } = useLocation();
@@ -184,7 +191,6 @@ const ProfileRouter = () => {
 
         participationDeclined(event, sender, dispatch);
       });
-
       socket.on('event_modified', data => {
         const {
           initialBeginning,
@@ -232,6 +238,34 @@ const ProfileRouter = () => {
 
         eventDeleted(event, username, dispatch);
       });
+      socket.on('task_completed', data => {
+        const { task, supervisor: taskSupervisor } = data;
+        if (taskSupervisor._id !== userId) return;
+
+        receiveTask(task, role, dispatch);
+        notifyTask(task, taskSupervisor.username, dispatch);
+      });
+      socket.on('task_validated', task => {
+        const { performer } = task;
+
+        if (performer !== userId) return;
+        receiveTask(task, role, dispatch);
+        notifyTask(task, username, dispatch);
+      });
+      socket.on('task_created', data => {
+        const {
+          task,
+          task: { performer },
+          creator,
+          supervisor: taskSupervisor,
+        } = data;
+        if (role === 'student' && performer._id !== userId) return;
+
+        if (role === 'teacher' && taskSupervisor?._id !== userId) return;
+
+        receiveCreatedTask(task, dispatch);
+        notifyTask(task, creator, dispatch);
+      });
     }
     return () => {
       socket?.off('receive_message');
@@ -247,8 +281,11 @@ const ProfileRouter = () => {
       socket?.off('event_declined');
       socket?.off('event_modified');
       socket?.off('event_deleted');
+      socket?.off('task_completed');
+      socket?.off('task_validated');
+      socket?.off('task_created');
     };
-  }, [jwt, userId, role, activeUser, dispatch, pathname]);
+  }, [jwt, userId, role, activeUser, dispatch, pathname, supervisor, username]);
 
   return (
     <Fragment>
@@ -260,6 +297,7 @@ const ProfileRouter = () => {
           <Route path="/teaching" element={<TeachingDemands />} />
           <Route path="/members/*" element={<Members />} />
           <Route path="/calendar" element={<Calendar />} />
+          <Route path="/tasks" element={<Tasks />} />
           <Route path="*" element={<Navigate to="/" replace />} replace />
         </Routes>
       </Layout>
@@ -304,6 +342,19 @@ const ProfileRouter = () => {
             beginning={eventsNotificationData.beginning}
             end={eventsNotificationData.end}
             accepted={eventsNotificationData.accepted}
+          />,
+          document.querySelector('#root')
+        )}
+      {tasksNotificationData &&
+        createPortal(
+          <Notification
+            id={tasksNotificationData.id}
+            title={tasksNotificationData.title}
+            username={tasksNotificationData.username}
+            message={tasksNotificationData.message}
+            status={tasksNotificationData.valid}
+            type={tasksNotificationData.type}
+            validated={tasksNotificationData.validated}
           />,
           document.querySelector('#root')
         )}

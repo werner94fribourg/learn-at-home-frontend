@@ -53,8 +53,8 @@ const DateTable = props => {
 DateTable.propTypes = {
   /** the selected date in the application */
   date: PropTypes.object,
-  /** the array of dates that will be displayed in the table */
-  displayed: PropTypes.arrayOf(PropTypes.object),
+  /** the date that is actually displayed in the table */
+  displayed: PropTypes.object,
   /** the handler function called when the user clicks on a specific date */
   onDateClick: PropTypes.func,
 };

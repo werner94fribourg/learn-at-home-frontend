@@ -4,6 +4,7 @@ import {
   declineParticipation,
   participateInEvent,
 } from '../../../store/slice/calendar';
+import { closeNotification as closeTasksNotification } from '../../../store/slice/tasks';
 import {
   acceptDemand,
   cancelDemand,
@@ -20,6 +21,7 @@ import Button from '../Button/Button';
 import styles from './Notification.module.scss';
 import {
   faCalendar,
+  faListCheck,
   faPen,
   faPersonChalkboard,
   faUserMinus,
@@ -57,6 +59,7 @@ const Notification = props => {
     beginning,
     end,
     accepted,
+    validated,
   } = props;
   const notificationRef = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -119,6 +122,16 @@ const Notification = props => {
       notificationTitle = 'Cancellation';
       receiverTextIntroduction = 'Type of change : ';
       break;
+    case 'task_created':
+      icon = faListCheck;
+      notificationTitle = 'Task';
+      receiverTextIntroduction = 'Created by ';
+      break;
+    case 'task_modified':
+      icon = faListCheck;
+      notificationTitle = 'Task';
+      receiverTextIntroduction = `${validated ? 'Validated' : 'Completed'} by `;
+      break;
     default:
       break;
   }
@@ -141,6 +154,7 @@ const Notification = props => {
       closeUserNotification(dispatch);
       closeDemandNotification(dispatch);
       closeEventNotification(dispatch);
+      closeTasksNotification(dispatch);
     }, 500);
   };
 
@@ -310,6 +324,7 @@ const Notification = props => {
             type !== 'event_accepted' &&
             type !== 'event_declined' &&
             type !== 'event_modified' &&
+            type !== 'task_modified' &&
             type === 'event_deleted' && (
               <h3 className={statusClassNames}>
                 {status ? 'Success' : 'Fail'}
@@ -322,6 +337,7 @@ const Notification = props => {
             type === 'event_accepted' ||
             type === 'event_declined' ||
             type === 'event_modified' ||
+            type === 'task_modified' ||
             type === 'event_deleted') && (
             <h3 className={styles['notification__status']}>{title}</h3>
           )}
@@ -412,6 +428,8 @@ Notification.propTypes = {
   end: PropTypes.string,
   /** in the case of an event notification, the acceptation status of the event */
   accepted: PropTypes.bool,
+  /** in the case of a task notification, the validation status of the task */
+  validated: PropTypes.bool,
 };
 
 export default Notification;

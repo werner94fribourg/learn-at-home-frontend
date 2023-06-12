@@ -31,8 +31,8 @@ import { createSlice } from '@reduxjs/toolkit';
 /**
  * The teaching demand store object
  * @typedef TeachingDemandInitialState
- * @property {Array} demands - the array of teaching demands of the connected user
- * @property {Array} teachers - the array of available teachers of the connected user (student only)
+ * @property {Object[]} demands - the array of teaching demands of the connected user
+ * @property {Object[]} teachers - the array of available teachers of the connected user (student only)
  * @property {boolean} loading - the loading state of the application when retrieving the teaching demands
  * @property {SendMessage} sendMessage - the notification displayed when the user try to send a new teaching demand to another (student only)
  * @property {NotificationData} notificationData - the data we want to display in the notification

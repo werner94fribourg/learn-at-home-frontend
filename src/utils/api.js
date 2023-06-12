@@ -4,11 +4,14 @@
  */
 import {
   ACCEPT_EVENT_URL,
+  COMPLETE_TASK_URL,
   DECLINE_EVENT_URL,
   MONTHLY_EVENTS_URL,
   SEND_TEACHING_DEMAND_URL,
   SINGLE_EVENT_URL,
+  SINGLE_STUDENT_TASKS_URL,
   SUPERVISED_STATUS_URL,
+  VALIDATE_TASK_URL,
   WEEKLY_EVENTS_URL,
   YEARLY_EVENTS_URL,
 } from './globals';
@@ -244,6 +247,139 @@ export const getTodoStudentsTasks = token =>
  */
 export const getValidatedStudentsTasks = token =>
   getTasks(token, VALIDATED_STUDENTS_TASKS_URL);
+
+/**
+ * Function used to create a new task for the connected user
+ * @param {string} token the jwt token of the logged user
+ * @param {Object} task the data of the new task we want to create
+ * @returns {Promise<Object>} a promise containing the new created task
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const createNewTask = (token, task) => {
+  return makeApiCall(
+    TASKS_URL,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(task),
+    },
+    data => {
+      const {
+        data: { task },
+      } = data;
+
+      return { valid: true, authorized: true, task };
+    },
+    201
+  );
+};
+
+/**
+ * Function used to create a new task for a supervised student
+ * @param {string} token the jwt token of the logged user
+ * @param {string} userId the id of the student for which we want to create a new task
+ * @param {Object} task the data of the new task we want to create
+ * @returns {Promise<Object>} a promise containing the new created task
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const createStudentTask = (token, userId, task) => {
+  return makeApiCall(
+    SINGLE_STUDENT_TASKS_URL.replace('{userId}', userId),
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(task),
+    },
+    data => {
+      const {
+        data: { task },
+      } = data;
+
+      return { valid: true, authorized: true, task };
+    },
+    201
+  );
+};
+
+/**
+ * Function used to mark a task as completed
+ * @param {string} token the jwt token of the logged user
+ * @param {string} taskId the id of the task we want to mark as completed
+ * @returns {Promise<Object>} a promise containing the updated task
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const completeTask = (token, taskId) => {
+  return makeApiCall(
+    COMPLETE_TASK_URL.replace('{id}', taskId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { task },
+      } = data;
+
+      return { valid: true, authorized: true, task };
+    }
+  );
+};
+
+/**
+ * Function used to mark a task as validated
+ * @param {string} token the jwt token of the logged user
+ * @param {string} taskId the id of the task we want to mark as validated
+ * @returns {Promise<Object>} a promise containing the updated task
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const validateTask = (token, taskId) => {
+  return makeApiCall(
+    VALIDATE_TASK_URL.replace('{id}', taskId),
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { task },
+      } = data;
+
+      return { valid: true, authorized: true, task };
+    }
+  );
+};
 
 /**
  * The params of the getSupervisedStudents function
