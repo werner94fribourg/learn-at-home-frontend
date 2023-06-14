@@ -1,9 +1,10 @@
 import Layout from '../components/Layout/Layout';
+import Alert from '../components/UI/Alert/Alert';
 import MessageNotification from '../components/UI/MessageNotification/MessageNotification';
 import Notification from '../components/UI/Notification/Notification';
 import Calendar from '../pages/Calendar';
 import TeachingDemands from '../pages/TeachingDemands';
-import { logout } from '../store/slice/auth';
+import { logout, resetSuccessMessage } from '../store/slice/auth';
 import {
   eventDeleted,
   eventModified,
@@ -62,7 +63,7 @@ const Tasks = loadable(() => import('../pages/Tasks'));
  */
 const ProfileRouter = () => {
   const {
-    auth: { jwt },
+    auth: { jwt, confirmationSuccessMessage },
     users: {
       me: { _id: userId, role, supervisor, username },
       activeUser: { id: activeUser },
@@ -294,6 +295,10 @@ const ProfileRouter = () => {
     };
   }, [jwt, userId, role, activeUser, dispatch, pathname, supervisor, username]);
 
+  const alertHandler = () => {
+    resetSuccessMessage(dispatch);
+  };
+
   return (
     <Fragment>
       <Layout>
@@ -362,6 +367,15 @@ const ProfileRouter = () => {
             status={tasksNotificationData.valid}
             type={tasksNotificationData.type}
             validated={tasksNotificationData.validated}
+          />,
+          document.querySelector('#root')
+        )}
+      {confirmationSuccessMessage &&
+        createPortal(
+          <Alert
+            message={confirmationSuccessMessage}
+            type="success"
+            onClose={alertHandler}
           />,
           document.querySelector('#root')
         )}

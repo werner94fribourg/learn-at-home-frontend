@@ -1,7 +1,7 @@
 import { connect, resetErrorMessage } from '../../../store/slice/auth';
 import Alert from '../../UI/Alert/Alert';
 import Button from '../../UI/Button/Button';
-import Input from './Input/Input';
+import Input from '../../UI/Input/Input';
 import styles from './Login.module.scss';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -57,7 +57,7 @@ const Login = () => {
           title="Username"
           id="username"
           type="text"
-          placeholder="Email address"
+          placeholder="Username"
           inputRef={usernameRef}
         />
         <Input

@@ -112,17 +112,41 @@ export const getErrorObject = (status, message) => {
 };
 
 /**
+ * Function used to generate a response object when an error status code is sent back in the signup process
+ * @param {string} message the error message sent back by the server
+ * @param {Object[]} fields the array of error messages for each existing field in the application
+ * @returns {Object} the generated response object in case an error status code is sent back in the registration process
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getErrorObjectSignup = (message, fields) => {
+  return {
+    valid: false,
+    message,
+    fields,
+  };
+};
+
+/**
  * Function used to make an API Call to a specific url in the backend
  * @param {string} url the url of the endpoint to which we want to make the API call
  * @param {Object} fetchObj the request parameters used to make the API call
  * @param {Function} returnData the handler function used to return the data when successfully retrieving it from the API
  * @param {number} code the status code of the response in case it successfully retrieves it (200 by default)
+ * @param {boolean} signup a boolean informing the user if he is making a registration process (false by default)
  * @returns {Promise<Object>} a promise returning a response object data depending on the success of the API Call
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const makeApiCall = async (url, fetchObj, returnData, code = 200) => {
+export const makeApiCall = async (
+  url,
+  fetchObj,
+  returnData,
+  code = 200,
+  signup = false
+) => {
   try {
     const response = await fetch(url, fetchObj);
 
@@ -134,7 +158,8 @@ export const makeApiCall = async (url, fetchObj, returnData, code = 200) => {
 
     if (status === code) return returnData(data);
 
-    const { message } = data;
+    const { message, fields } = data;
+    if (signup) return getErrorObjectSignup(message, fields);
     return getErrorObject(status, message);
   } catch (err) {
     return getUnknowErrorObject();
@@ -380,7 +405,7 @@ export const setFieldValue = (event, field, value) => {
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 export const formReducers = (state, action) => {
-  let event = {
+  const event = {
     title: '',
     description: '',
     beginningDate: '',
@@ -413,4 +438,91 @@ export const formReducers = (state, action) => {
   if (type === 'init') return event;
 
   return setFieldValue(event, type, payload);
+};
+
+/**
+ * Function used to modify a field of a new user / message state in the registration page
+ * @param {Object} newState the new object state from which we want to modify a field
+ * @param {string} field the field (or action) of the input object we want to modify
+ * @param {string} value the new value we want to set or add to the field of the input object
+ * @returns {Object} the updated state object
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const setField = (newState, field, value) => {
+  if (field.includes('reset')) {
+    const resetField = field.split('_')[1];
+    newState[resetField] = '';
+    return newState;
+  }
+  newState[field] = value;
+  return newState;
+};
+
+/**
+ * Reducer function used to update the user typed in the registration form
+ * @param {Object} state the state object of the user input object
+ * @param {Object} action object containing the type of action we want to apply to the state and the new value associated to this action
+ * @returns {Object} an updated version of the state
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const userReducers = (state, action) => {
+  const user = {
+    username: '',
+    email: '',
+    firstname: '',
+    lastname: '',
+    role: '',
+    password: '',
+    passwordConfirm: '',
+    ...state,
+  };
+
+  const { type, payload } = action;
+
+  if (type === 'init') return user;
+
+  return setField(user, type, payload);
+};
+
+/**
+ * Reducer function used to update the invalid messages returned by the backend when the user tries to register in the platform
+ * @param {Object} state the state object of the invalid messages returned by the backend
+ * @param {Object} action object containing the type of action we want to apply to the state and the new value associated to this action
+ * @returns {Object} an updated version of the state
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const invalidFieldsReducer = (state, action) => {
+  const messages = {
+    username: '',
+    email: '',
+    firstname: '',
+    lastname: '',
+    role: '',
+    password: '',
+    passwordConfirm: '',
+    ...state,
+  };
+
+  const { type, payload } = action;
+
+  if (type === 'init') return messages;
+
+  if (type === 'reset_all')
+    return {
+      username: '',
+      email: '',
+      firstname: '',
+      lastname: '',
+      role: '',
+      password: '',
+      passwordConfirm: '',
+    };
+
+  return setField(messages, type, payload);
 };

@@ -58,6 +58,33 @@ export const SINGLE_USER_URL = USERS_URL + '/{id}';
 export const LOGIN_URL = USERS_URL + '/login';
 
 /**
+ * URL of the users/signup endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const SIGNUP_URL = USERS_URL + '/signup';
+
+/**
+ * URL of the users/confirm/{confirmToken} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const CONFIRM_URL = USERS_URL + '/confirm/{confirmToken}';
+
+/**
+ * URL of the users/check-password endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const CHECK_PASSWORD_URL = USERS_URL + '/check-password';
+
+/**
  * URL of the users/me endpoint
  * @type {string}
  *

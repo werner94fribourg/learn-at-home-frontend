@@ -4,10 +4,13 @@
  */
 import {
   ACCEPT_EVENT_URL,
+  CHECK_PASSWORD_URL,
   COMPLETE_TASK_URL,
+  CONFIRM_URL,
   DECLINE_EVENT_URL,
   MONTHLY_EVENTS_URL,
   SEND_TEACHING_DEMAND_URL,
+  SIGNUP_URL,
   SINGLE_EVENT_URL,
   SINGLE_STUDENT_TASKS_URL,
   SUPERVISED_STATUS_URL,
@@ -71,6 +74,94 @@ export const login = credentials => {
     data => {
       const { token } = data;
       return { valid: true, token };
+    }
+  );
+};
+
+/**
+ * Function used to register the user into the application
+ * @param {Object} data the data the user sends to register into the platform
+ * @returns {Promise<Object>} a promise containing the response retrieved from the registration attempt
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const signup = data => {
+  return makeApiCall(
+    SIGNUP_URL,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    },
+    data => {
+      const { message } = data;
+      return { valid: true, message };
+    },
+    201,
+    true
+  );
+};
+
+/**
+ * Function used to confirm the inscription to the platform for an user
+ * @param {string} confirmToken the confirmation token we want to send to the backend
+ * @returns {Promise<Object>} a promise containing the response retrieved from the confirmation attempt
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const confirm = confirmToken => {
+  return makeApiCall(
+    CONFIRM_URL.replace('{confirmToken}', confirmToken),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+    },
+    data => {
+      const { token } = data;
+      return { valid: true, token };
+    }
+  );
+};
+
+/**
+ * Function used to check if a password respects the validity constraints defined by the platform
+ * @param {string} password the password we want to check the validity
+ * @returns {Promise<Object>} a promise containing the validations messages the password doesn't respect
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const checkPassword = password => {
+  return makeApiCall(
+    CHECK_PASSWORD_URL,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ password }),
+    },
+    data => {
+      const {
+        data: { validations },
+      } = data;
+
+      return { valid: true, validations };
     }
   );
 };
