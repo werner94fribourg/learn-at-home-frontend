@@ -1,6 +1,6 @@
-import { setSignupStatus } from '../../../store/slice/auth';
+import { setConfirmationStatus } from '../../../store/slice/auth';
 import styles from './ConfirmationPage.module.scss';
-import { faAddressCard } from '@fortawesome/free-solid-svg-icons';
+import { faAddressCard, faKey } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,26 +13,31 @@ import { useNavigate } from 'react-router';
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
 const ConfirmationPage = () => {
-  const { signupMessage } = useSelector(state => state.auth);
+  const { confirmationMessage, confirmationType } = useSelector(
+    state => state.auth
+  );
   const dispatch = useDispatch();
-  const paragraphs = signupMessage.split('\n');
+  const paragraphs = confirmationMessage.split('\n');
   const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
       navigate('/login');
       setTimeout(() => {
-        setSignupStatus(false, '', dispatch);
+        setConfirmationStatus(false, '', dispatch, '');
       }, 500);
     }, 2500);
   }, [navigate, dispatch]);
 
+  let icon;
+
+  if (confirmationType === 'registration') icon = faAddressCard;
+
+  if (confirmationType === 'password_forgotten') icon = faKey;
+
   return (
     <div className={styles.confirmation}>
-      <FontAwesomeIcon
-        className={styles['confirmation__icon']}
-        icon={faAddressCard}
-      />
+      <FontAwesomeIcon className={styles['confirmation__icon']} icon={icon} />
       <h1 className={styles['confirmation__title']}>
         {paragraphs.map((p, index) => (
           <Fragment key={index}>

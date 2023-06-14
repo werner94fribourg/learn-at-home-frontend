@@ -1,0 +1,15 @@
+@import '../../../scss/abstracts/variables';
+
+.form {
+  font-size: 1.4rem;
+  &__input {
+    padding: 1.2rem 0;
+  }
+  &__btn {
+    margin-top: 3rem;
+    font-size: 1.4rem;
+    padding: 2.2rem 0;
+    width: 50%;
+    border: 1px solid $primary;
+  }
+}

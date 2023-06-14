@@ -1,7 +1,7 @@
 import {
   resetErrorMessage,
   setErrorMessage,
-  setSignupStatus,
+  setConfirmationStatus,
 } from '../../../store/slice/auth';
 import { checkPassword, signup } from '../../../utils/api';
 import {
@@ -114,7 +114,7 @@ const Form = () => {
       return;
     }
 
-    setSignupStatus(true, message, dispatch);
+    setConfirmationStatus(true, message, dispatch);
 
     navigate('/confirmation');
   };
