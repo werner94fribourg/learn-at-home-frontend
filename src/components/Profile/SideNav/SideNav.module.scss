@@ -1,0 +1,36 @@
+@import '../../../scss/abstracts/variables';
+
+.sidenav {
+  flex: 25rem 0 0;
+  background-color: $primary;
+  padding: 4rem 0;
+  &__list {
+    list-style: none;
+    padding: 0;
+  }
+  &__item {
+    font-size: 2rem;
+    color: $white;
+    cursor: pointer;
+    padding: 1.5rem 0;
+    padding-left: 1rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.5s ease-in-out;
+    border-left: 4px solid $white;
+    transform: translateX(-4px);
+    &--active {
+      transform: translateX(0);
+    }
+    &:hover {
+      transform: translateX(0);
+      transition: transform 0.5s ease-in-out;
+    }
+  }
+  &__icon {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+}

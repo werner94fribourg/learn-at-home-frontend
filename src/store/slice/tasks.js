@@ -198,7 +198,7 @@ export const getValidatedTasks = async (token, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {Object} data the data of the new task we want to create
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of creating a task, the authorization status of the creation attempt and the new task
+ * @returns {Promise<Array>} an array containing the validity of creating a task, the authorization status of the creation attempt and the new task
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -217,7 +217,7 @@ export const createTask = async (token, data, dispatch) => {
  * @param {string} studentId the id of the student for which we want to create a new task
  * @param {Object} data the data of the new task we want to create
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of creating a task, the authorization status of the creation attempt and the new task
+ * @returns {Promise<Array>} an array containing the validity of creating a task, the authorization status of the creation attempt and the new task
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -244,7 +244,7 @@ export const createSupervisedStudentTask = async (
  * @param {string} token the jwt token of the connected user
  * @param {string} taskId the id of the task we want to set as completed
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of the completion attempt, the authorization status of the creation attempt and the new task
+ * @returns {Promise<Array>} an array containing the validity of the completion attempt, the authorization status of the creation attempt and the new task
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -262,7 +262,7 @@ export const finishTask = async (token, taskId, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} taskId the id of the task we want to set as validated
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of the validation attempt, the authorization status of the creation attempt and the new task
+ * @returns {Promise<Array>} an array containing the validity of the validation attempt, the authorization status of the creation attempt and the new task
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)

@@ -2,7 +2,11 @@
  * Tasks slice of the redux store
  * @module store
  */
-import { getSupervisedStudents } from '../../utils/api';
+import {
+  getSupervisedStudents,
+  modifyConnectedUser,
+  modifyConnectedUserWithProfilePicture,
+} from '../../utils/api';
 import {
   addContact,
   declineInvitation,
@@ -258,6 +262,47 @@ export const getMe = async (token, dispatch) => {
   } else dispatch(usersActions.setLoading());
 
   return authorized;
+};
+
+/**
+ * Async Function used to modify the data of the connected user
+ * @param {string} token the jwt token of the connected user
+ * @param {Object} data the new values of the connected user (username, ...)
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<Array>} an array containing the validity of modifying the user's data, the authorization status of the attempt, the error message and the fields that generated an error
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const setMe = async (token, data, dispatch) => {
+  const { valid, authorized, message, fields, me } = await modifyConnectedUser(
+    token,
+    data
+  );
+
+  if (valid) dispatch(usersActions.setMe(me));
+
+  return [valid, authorized, message, fields];
+};
+
+/**
+ * Async Function used to modify the data of the connected user when containing the user's profile picture
+ * @param {string} token the jwt token of the connected user
+ * @param {FormData} formData the new values of the connected user, containing the new profile picture
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<Array>} an array containing the validity of modifying the user's data, the authorization status of the attempt, the error message, the fields that generated an error and the new profile picture url
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const setMeWithProfilePicture = async (token, formData, dispatch) => {
+  const { valid, authorized, message, fields, me } =
+    await modifyConnectedUserWithProfilePicture(token, formData);
+
+  if (valid) dispatch(usersActions.setMe(me));
+
+  const { photo } = me;
+  return [valid, authorized, message, fields, photo];
 };
 
 /**

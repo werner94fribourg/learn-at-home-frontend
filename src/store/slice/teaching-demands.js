@@ -236,7 +236,7 @@ export const closeNotification = dispatch => {
  * @param {string} token the jwt token of the connected user
  * @param {string} userId the id of the teacher to which the connected user wants to send a teaching demand
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of retrieving the demands, the authorization status, the message sent back by the server and the new created demand
+ * @returns {Promise<Array>} an array containing the validity of retrieving the demands, the authorization status, the message sent back by the server and the new created demand
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -257,7 +257,7 @@ export const sendDemand = async (token, userId, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} id the id of the demand the connected used wants to accept
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of accepting a demand, the authorization status of the acceptation attempt and the updated demand
+ * @returns {Promise<Array>} an array containing the validity of accepting a demand, the authorization status of the acceptation attempt and the updated demand
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
