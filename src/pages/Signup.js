@@ -1,5 +1,5 @@
 import Form from '../components/Signup/Form/Form';
-import styles from './Signup.module.scss';
+import styles from './Forms.module.scss';
 
 /**
  * Component representing the Signup page of the application

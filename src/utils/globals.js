@@ -85,6 +85,24 @@ export const CONFIRM_URL = USERS_URL + '/confirm/{confirmToken}';
 export const CHECK_PASSWORD_URL = USERS_URL + '/check-password';
 
 /**
+ * URL of the users/forgot-password endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const PASSWORD_FORGOTTEN_URL = USERS_URL + '/forgot-password';
+
+/**
+ * URL of the users/reset-password/{resetToken} endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const RESET_PASSWORD_URL = USERS_URL + '/reset-password/{resetToken}';
+
+/**
  * URL of the users/me endpoint
  * @type {string}
  *

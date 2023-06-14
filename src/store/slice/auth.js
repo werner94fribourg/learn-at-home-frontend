@@ -13,8 +13,9 @@ import { createSlice } from '@reduxjs/toolkit';
  * @property {jwt} jwt - jwt token of the authenticated user
  * @property {string} authErrorMessage - the displayed error message when failing to authenticate / register
  * @property {string} confirmationSuccessMessage - the display success message when successfully confirming the registration into the application
- * @property {boolean} signed - a boolean informing the application if an user has recently signed to be able to access the confirmation page
- * @property {string} signupMessage - the message displayed in the signup confirmation page
+ * @property {boolean} confirmed - a boolean informing the application if an user is able to access the confirmation page
+ * @property {string} confirmationMessage - the message displayed in the confirmation page
+ * @property {string} confirmationType - the type of the confirmation message displayed in the confirmation page
  *
  * The initial state for the authentication store of the user
  * @type {AuthInitialState}
@@ -27,8 +28,9 @@ const initialState = {
   jwt: '',
   authErrorMessage: '',
   confirmationSuccessMessage: '',
-  signed: false,
-  signupMessage: '',
+  confirmed: false,
+  confirmationMessage: '',
+  confirmationType: '',
 };
 
 /**
@@ -60,13 +62,17 @@ const authSlice = createSlice({
       const { payload: message } = action;
       state.confirmationSuccessMessage = message;
     },
-    setSignupStatus(state, action) {
+    setConfirmationStatus(state, action) {
       const { payload: status } = action;
-      state.signed = status;
+      state.confirmed = status;
     },
-    setSignupMessage(state, action) {
+    setConfirmationMessage(state, action) {
       const { payload: message } = action;
-      state.signupMessage = message;
+      state.confirmationMessage = message;
+    },
+    setConfirmationType(state, action) {
+      const { payload: type } = action;
+      state.confirmationType = type;
     },
   },
 });
@@ -113,14 +119,14 @@ export const connect = async (credentials, dispatch) => {
 };
 
 /**
- * Function used to log the user when he successfully confirm its inscription into the platform
+ * Function used to log the user when he successfully confirm its inscription into the platform or changed his password
  * @param {string} token the jwt token returned when succeeding in confirming the inscription
  * @param {Function} dispatch the dispatcher function used to modify the store
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const confirmInscription = (token, dispatch) => {
+export const setToken = (token, dispatch) => {
   dispatch(authActions.login(token));
   localStorage.setItem('jwt', token);
 };
@@ -181,17 +187,24 @@ export const initialize = (token, dispatch) => {
 };
 
 /**
- * Function used to modify the signup status of the user, used to manage its access to the confirmation page
- * @param {boolean} status the signup status of the non-connected user
- * @param {message} message the message that will displayed into the Signup confirmation page
+ * Function used to modify the confirmation status of the user, used to manage its access to the confirmation page
+ * @param {boolean} status the confirmation status of the non-connected user
+ * @param {string} message the message that will displayed into the confirmation confirmation page
+ * @param {string} type the type of confirmation that will be displayed in the confirmation page
  * @param {Function} dispatch the dispatcher function used to modify the store
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const setSignupStatus = (status, message, dispatch) => {
-  dispatch(authActions.setSignupStatus(status));
-  dispatch(authActions.setSignupMessage(message));
+export const setConfirmationStatus = (
+  status,
+  message,
+  dispatch,
+  type = 'registration'
+) => {
+  dispatch(authActions.setConfirmationStatus(status));
+  dispatch(authActions.setConfirmationMessage(message));
+  dispatch(authActions.setConfirmationType(type));
 };
 
 /**
@@ -214,4 +227,15 @@ export const resetErrorMessage = dispatch => {
  */
 export const resetSuccessMessage = dispatch => {
   dispatch(authActions.setSuccessMessage(''));
+};
+
+/**
+ * Function used to reset the confirmation type
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const resetConfirmationType = dispatch => {
+  dispatch(authActions.setConfirmationType(''));
 };

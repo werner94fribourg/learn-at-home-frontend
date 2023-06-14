@@ -9,6 +9,8 @@ import {
   CONFIRM_URL,
   DECLINE_EVENT_URL,
   MONTHLY_EVENTS_URL,
+  PASSWORD_FORGOTTEN_URL,
+  RESET_PASSWORD_URL,
   SEND_TEACHING_DEMAND_URL,
   SIGNUP_URL,
   SINGLE_EVENT_URL,
@@ -162,6 +164,92 @@ export const checkPassword = password => {
       } = data;
 
       return { valid: true, validations };
+    }
+  );
+};
+
+/**
+ * Function used to send a forgot password request
+ * @param {Object} data the data the user sends to make a forgot password request
+ * @returns {Promise<Object>} a promise containing the response retrieved from the forgot password request
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const forgotPassword = data => {
+  return makeApiCall(
+    PASSWORD_FORGOTTEN_URL,
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    },
+    data => {
+      const { message } = data;
+      return { valid: true, message };
+    }
+  );
+};
+
+/**
+ * Function used to check the validity of a reset password link
+ * @param {string} resetToken the reset password token
+ * @returns {Promise<Object>} a promise containing the validity of the reset password link
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const getResetLinkValidity = resetToken => {
+  return makeApiCall(
+    RESET_PASSWORD_URL.replace('{resetToken}', resetToken),
+    {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+    },
+    data => {
+      const {
+        data: { valid: validity },
+      } = data;
+      return { valid: true, validity };
+    }
+  );
+};
+
+/**
+ * Function used to reset a password for the user
+ * @param {string} resetToken the reset password token
+ * @param {Object} data the data sent by the user to reset a password
+ * @returns {Promise<Object>} a promise containing the jwt token to log in the user if the reset happens successfully
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const resetPassword = (resetToken, data) => {
+  return makeApiCall(
+    RESET_PASSWORD_URL.replace('{resetToken}', resetToken),
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    },
+    data => {
+      const { token, message } = data;
+      return { valid: true, token, message };
     }
   );
 };

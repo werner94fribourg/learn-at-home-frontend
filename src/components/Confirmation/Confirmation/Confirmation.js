@@ -1,7 +1,4 @@
-import {
-  confirmInscription,
-  setSuccessMessage,
-} from '../../../store/slice/auth';
+import { setToken, setSuccessMessage } from '../../../store/slice/auth';
 import { confirm } from '../../../utils/api';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
@@ -23,7 +20,7 @@ const Confirmation = () => {
       const { valid, token } = await confirm(confirmToken);
 
       if (valid) {
-        confirmInscription(token, dispatch);
+        setToken(token, dispatch);
         setSuccessMessage('Account successfully confirmed.', dispatch);
       }
 
