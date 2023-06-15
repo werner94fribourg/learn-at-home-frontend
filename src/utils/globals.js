@@ -28,7 +28,8 @@ export const API_URL = BACKEND_URL + '/api/v1';
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
  */
-export const SITE_URL = 'http://localhost:3000';
+export const SITE_URL =
+  'https://learn-at-home-frontend-5g5p7l5zv-werner94fribourg.vercel.app/';
 
 /**
  * URL of the user ressource in the backend
