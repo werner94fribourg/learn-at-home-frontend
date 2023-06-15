@@ -262,7 +262,7 @@ export const setPeriod = (token, period, date, dispatch) => {
  * @param {string} username the username of the connected user
  * @param {Object} newEvent the new event's data
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of creating an event, the authorization status of the creation attempt and the new event
+ * @returns {Promise<Array>} an array containing the validity of creating an event, the authorization status of the creation attempt and the new event
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -304,7 +304,7 @@ export const createEvent = async (token, username, newEvent, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {Object} event the event we want to modify
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of modifying an event, the authorization status of the modification attempt and the new event
+ * @returns {Promise<Array>} an array containing the validity of modifying an event, the authorization status of the modification attempt and the new event
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -424,7 +424,7 @@ export const deleteEvent = async (token, event, username, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} eventId the id of the event we want to accept the invitation
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of acceptating an event's invitation, the authorization status of the acceptation attempt and the updated event
+ * @returns {Promise<Array>} an array containing the validity of acceptating an event's invitation, the authorization status of the acceptation attempt and the updated event
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)
@@ -445,7 +445,7 @@ export const participateInEvent = async (token, eventId, dispatch) => {
  * @param {string} token the jwt token of the connected user
  * @param {string} eventId the id of the event we want to decline the invitation
  * @param {Function} dispatch the dispatcher function used to modify the store
- * @returns {Promise<boolean[]>} an array containing the validity of declining an event's invitation, the authorization status of the decline attempt and the updated event
+ * @returns {Promise<Array>} an array containing the validity of declining an event's invitation, the authorization status of the decline attempt and the updated event
  *
  * @version 1.0.0
  * @author [Werner Schmid](https://github.com/werner94fribourg)

@@ -2,7 +2,7 @@
  * Auth slice of the redux store
  * @module store
  */
-import { login } from '../../utils/api';
+import { login, modifyPassword } from '../../utils/api';
 import { getSocket, resetSocket } from '../../utils/utils';
 import { createSlice } from '@reduxjs/toolkit';
 
@@ -49,6 +49,10 @@ const authSlice = createSlice({
       state.isAuth = true;
       state.jwt = token;
       state.authErrorMessage = '';
+    },
+    resetPassword(state, action) {
+      const { payload: token } = action;
+      state.jwt = token;
     },
     logout(state) {
       state.isAuth = false;
@@ -116,6 +120,30 @@ export const connect = async (credentials, dispatch) => {
   }
 
   dispatch(authActions.setErrorMessage(data.message));
+};
+
+/**
+ * Async Function used to modify the user password and store the new generated jwt token in the store
+ * @param {string} jwt the jwt token of the connected user
+ * @param {Object} data the new password data
+ * @param {Function} dispatch the dispatcher function used to modify the store
+ * @returns {Promise<Array>} an array containing the validity of modifying the password, the authorization status code of the attempt, the error message and the fields that generated an error
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const modifyUserPassword = async (jwt, data, dispatch) => {
+  const { valid, authorized, token, message, fields } = await modifyPassword(
+    jwt,
+    data
+  );
+
+  if (valid) {
+    dispatch(authActions.resetPassword(token));
+    localStorage.setItem('jwt', token);
+  }
+
+  return [valid, authorized, message, fields];
 };
 
 /**

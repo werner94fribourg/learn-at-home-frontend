@@ -141,6 +141,15 @@ export const MEMBERS_URL =
   '?sort=lastname,firstname&fields=username,firstname,lastname,photo&page={page}&limit={limit}';
 
 /**
+ * URL of the users/update-password endpoint
+ * @type {string}
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const UPDATE_PASSWORD_URL = USERS_URL + '/update-password';
+
+/**
  * URL of the users/contacts endpoint
  * @type {string}
  *

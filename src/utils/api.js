@@ -17,6 +17,7 @@ import {
   SINGLE_STUDENT_TASKS_URL,
   SUPERVISED_STATUS_URL,
   TODAY_EVENTS_URL,
+  UPDATE_PASSWORD_URL,
   VALIDATE_TASK_URL,
   WEEKLY_EVENTS_URL,
   YEARLY_EVENTS_URL,
@@ -278,6 +279,99 @@ export const getConnectedUser = token => {
     data => {
       return { valid: true, authorized: true, me: data.data.user };
     }
+  );
+};
+
+/**
+ * Function used to modify the data of the connected user (firstname, username, ...)
+ * @param {string} token the jwt token of the logged user
+ * @param {Object} data The new data values for the connected user
+ * @returns {Promise<Object>} a promise containing the updated data of the connected user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const modifyConnectedUser = (token, data) => {
+  return makeApiCall(
+    ME_URL,
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    },
+    data => {
+      return { valid: true, authorized: true, me: data.data.user };
+    },
+    200,
+    true
+  );
+};
+
+/**
+ * Function used to modify the data of the connected user when also sending a new profile picture
+ * @param {string} token the jwt token of the logged user
+ * @param {FormData} formData the data (username, ..., user photo) values for the connected user
+ * @returns {Promise<Object>} a promise containing the updated data of the connected user
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const modifyConnectedUserWithProfilePicture = (token, formData) => {
+  return makeApiCall(
+    ME_URL,
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: formData,
+    },
+    data => {
+      return { valid: true, authorized: true, me: data.data.user };
+    },
+    200,
+    true
+  );
+};
+
+/**
+ * Function used to modify the password of the connected user
+ * @param {string} token the jwt token of the logged user
+ * @param {Object} data the data containing the actual password and the new one
+ * @returns {Promise<Object>} a promise containing the new jwt token to log the user in the app after the password modification
+ *
+ * @version 1.0.0
+ * @author [Werner Schmid](https://github.com/werner94fribourg)
+ */
+export const modifyPassword = (token, data) => {
+  return makeApiCall(
+    UPDATE_PASSWORD_URL,
+    {
+      method: 'PATCH',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+        accept: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      body: JSON.stringify(data),
+    },
+    data => {
+      const { token } = data;
+      return { valid: true, authorized: true, token };
+    },
+    200,
+    true
   );
 };
 
