@@ -26,6 +26,9 @@ const navbarSlice = createSlice({
     setOpenState(state) {
       state.isOpen = !state.isOpen;
     },
+    setClosedState(state) {
+      state.isOpen = false;
+    },
   },
 });
 

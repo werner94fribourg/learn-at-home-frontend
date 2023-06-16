@@ -1,8 +1,9 @@
+import { navbarActions } from '../../store/slice/navbar';
 import Navbar from '../Navbar/Navbar';
 import styles from './Layout.module.scss';
 import PropTypes from 'prop-types';
 import { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 /**
  * Layout component, containing the navbar and the content of a page once the user is logged in
@@ -12,15 +13,20 @@ import { useSelector } from 'react-redux';
  */
 const Layout = props => {
   const { isOpen } = useSelector(state => state.navbar);
+  const dispatch = useDispatch();
 
   let classNames = styles.main;
 
   if (isOpen) classNames += ` ${styles['navbar-open']}`;
 
+  const closeNavbarHandler = () => {
+    dispatch(navbarActions.setClosedState());
+  };
+
   return (
     <Fragment>
       <Navbar />
-      <main className={classNames}>
+      <main className={classNames} onClick={closeNavbarHandler}>
         <div className={styles.content}>{props.children}</div>
       </main>
     </Fragment>
