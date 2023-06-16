@@ -51,8 +51,8 @@ const Login = () => {
           Enter your credentials to login
         </p>
         <p className={styles['login__nb']}>
-          N.B.: to test the app: <br />- create a new account <br />- use the
-          placeholders in the form as credentials to connect (teacher or
+          To test the app (options): <br />- create a new account <br />- use
+          the placeholders in the form as credentials to connect (teacher or
           student).
         </p>
       </div>
