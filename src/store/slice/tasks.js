@@ -72,9 +72,12 @@ const tasksSlice = createSlice({
     setTaskCompleted(state, action) {
       const { payload: task } = action;
 
-      state.tasks = state.tasks.filter(t => t._id !== task._id);
+      const taskIndex = state.tasks.findIndex(t => t._id === task._id);
 
-      state.doneTasks.push(task);
+      if (taskIndex === -1) return;
+
+      state.tasks[taskIndex] = task;
+      return;
     },
     setTaskValidated(state, action) {
       const { payload: task } = action;
