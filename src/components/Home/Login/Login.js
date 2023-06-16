@@ -50,6 +50,11 @@ const Login = () => {
         <p className={styles['login__description']}>
           Enter your credentials to login
         </p>
+        <p className={styles['login__nb']}>
+          N.B.: to test the app: <br />- create a new account <br />- use the
+          placeholders in the form as credentials to connect (teacher or
+          student).
+        </p>
       </div>
       <form className={styles['login__form']} onSubmit={formHandler}>
         <Input
@@ -57,7 +62,7 @@ const Login = () => {
           title="Username"
           id="username"
           type="text"
-          placeholder="Username"
+          placeholder="teacher / student"
           inputRef={usernameRef}
         />
         <Input
@@ -65,7 +70,7 @@ const Login = () => {
           title="Password"
           id="password"
           type={passwordShown ? 'text' : 'password'}
-          placeholder="Password"
+          placeholder="Test@1234"
           inputRef={passwordRef}
         >
           <FontAwesomeIcon

@@ -265,6 +265,9 @@ const Form = () => {
         </Fragment>
       )}
       <div className={styles['form__navigations']}>
+        {page === 1 && (
+          <Button className={styles['form__btn']} type="submit" text="Next" />
+        )}
         <Button
           className={`${styles['form__btn']} ${styles['form__btn--previous']}`}
           type="button"
@@ -272,9 +275,6 @@ const Form = () => {
           onClick={previousHandler}
           disabled={page === 1}
         />
-        {page === 1 && (
-          <Button className={styles['form__btn']} type="submit" text="Next" />
-        )}
         {page === 2 && (
           <Button className={styles['form__btn']} type="submit" text="Submit" />
         )}

@@ -2,7 +2,7 @@
 
 ## Description
 
-This [repository](https://github.com/werner94fribourg/learn-at-home-frontend) contains the the frontend's code of my [Learn@Home](https://www.figma.com/file/BMomGVZqLZb811mDMShpLu/UI-design-Sportify-FR?node-id=0%3A1) project. You can find the [documentation](https://learn-at-home-frontend-docs.netlify.app/) and the [deployed site](https://learn-at-home-frontend-5g5p7l5zv-werner94fribourg.vercel.app/).
+This [repository](https://github.com/werner94fribourg/learn-at-home-frontend) contains the the frontend's code of my [Learn@Home](https://www.figma.com/file/BMomGVZqLZb811mDMShpLu/UI-design-Sportify-FR?node-id=0%3A1) project. You can find the [documentation](https://learn-at-home-frontend-docs.netlify.app) and the [deployed site](https://learn-at-home-frontend.vercel.app).
 
 [Here](https://github.com/werner94fribourg/learn-at-home-backend) is the repository of the backend.
 

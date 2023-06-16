@@ -27,6 +27,10 @@
   &__description {
     color: $grey;
   }
+  &__nb {
+    color: $grey;
+    font-style: italic;
+  }
   &__form {
     width: 50%;
     display: flex;
